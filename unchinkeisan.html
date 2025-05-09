@@ -3,149 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>バス料金計算（深夜早朝 距離単価対応）</title>
+  <title>バス料金計算（詳細表示＋正確な深夜加算）</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #fff; padding: 20px; max-width: 900px; margin: auto; }
+    body { font-family: Arial, sans-serif; background: #fff; padding: 20px; max-width: 900px; margin: auto; }
     h1 { text-align: center; font-size: 24px; }
-    label { display: block; margin-top: 10px; margin-bottom: 5px; font-weight: bold; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    .day-group { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
     input[type="text"], input[type="number"] {
       width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box;
     }
-    button {
-      width: 100%; padding: 10px; font-size: 18px; margin: 20px 0; cursor: pointer;
-    }
-    #result {
-      font-size: 18px; margin-top: 20px; white-space: pre-line;
+    button { width: 100%; padding: 10px; font-size: 18px; margin: 20px 0; cursor: pointer; }
+    #result, #history {
+      font-size: 16px; margin-top: 20px; white-space: pre-line;
       background-color: #f0f0f0; padding: 20px; border-radius: 8px;
     }
   </style>
 </head>
 <body>
-  <h1>バス料金計算（深夜加算 距離単価込み）</h1>
+  <h1>バス料金計算（詳細表示＋正確な深夜加算）</h1>
 
   <label>時間制料金単価（円/時間）</label>
-  <input id="timeRate" type="number" inputmode="numeric" />
+  <input id="timeRate" type="number" />
 
   <label>距離制料金単価（円/km）</label>
-  <input id="distanceRate" type="number" inputmode="numeric" />
+  <input id="distanceRate" type="number" />
 
-  <label>回送距離（km）</label>
-  <input id="deadheadDistance" type="number" inputmode="decimal" />
+  <label><input type="checkbox" id="hasAltDriver" onchange="toggleAltDriver()"> 交代運転者あり</label>
 
-  <label>実車距離（km）</label>
-  <input id="realDistance" type="number" inputmode="decimal" />
-
-  <label>出庫時間（例：2500 または 25:00）</label>
-  <input id="departureTime" type="text" inputmode="numeric" />
-
-  <label>帰庫時間（例：2930 または 29:30）</label>
-  <input id="returnTime" type="text" inputmode="numeric" />
-
-  <label><input id="hasAlternateDriver" type="checkbox" onchange="toggleAlternateDriver()"> 交代運転者あり</label>
-
-  <div id="alternateDriverInputs" style="display:none;">
-    <label>交代運転者：距離加算単価（円/km）</label>
-    <input id="alternateDistanceRate" type="number" />
+  <div id="altDriverInputs" style="display:none;">
     <label>交代運転者：時間加算単価（円/時間）</label>
-    <input id="alternateTimeRate" type="number" />
+    <input id="altTimeRate" type="number" />
+    <label>交代運転者：距離加算単価（円/km）</label>
+    <input id="altDistanceRate" type="number" />
   </div>
 
-  <button onclick="calculateBusCharge()">計算する</button>
+  <div id="dayInputs"></div>
 
-  <div id="result">&nbsp;</div>
+  <button onclick="calculate()">計算する</button>
+
+  <div id="result"></div>
+  <h3>過去の計算履歴（最大10件）</h3>
+  <div id="history"></div>
 
   <script>
-    function normalizeTimeInput(raw) {
-      const cleaned = raw.replace(/[^0-9]/g, '');
-      if (/^\d{4}$/.test(cleaned)) {
-        const hours = parseInt(cleaned.slice(0, 2), 10);
-        const minutes = cleaned.slice(2);
-        return `${hours}:${minutes}`;
-      }
-      return raw;
+    const dayInputs = document.getElementById('dayInputs');
+    const savedValues = JSON.parse(localStorage.getItem('busCalcInput') || '{}');
+    const history = JSON.parse(localStorage.getItem('busCalcHistory') || '[]');
+
+    for (let i = 1; i <= 5; i++) {
+      const g = document.createElement('div');
+      g.className = 'day-group';
+      g.innerHTML = `<h3>${i}日目</h3>
+        <label>回送距離（km）</label><input type="number" id="deadhead${i}" />
+        <label>実車距離（km）</label><input type="number" id="real${i}" />
+        <label>出庫時間（例: 25:00）</label><input type="text" id="start${i}" />
+        <label>帰庫時間（例: 29:30）</label><input type="text" id="end${i}" />`;
+      dayInputs.appendChild(g);
     }
 
-    function parseTimeToDecimalHours(timeStr) {
-      const [h, m] = timeStr.split(':').map(Number);
+    function toggleAltDriver() {
+      document.getElementById('altDriverInputs').style.display =
+        document.getElementById('hasAltDriver').checked ? 'block' : 'none';
+    }
+
+    function normalizeTime(t) {
+      const parts = t.replace(/[^0-9]/g, '').padStart(4, '0');
+      const h = parseInt(parts.slice(0, 2), 10);
+      const m = parseInt(parts.slice(2), 10);
       return h + m / 60;
     }
 
-    function countNightHours(startHour, endHour) {
+    function roundByHalfHour(start, end) {
+      const raw = end - start;
+      const floor = Math.floor(raw);
+      const minutes = (raw - floor) * 60;
+      return minutes >= 30 ? floor + 1 : floor;
+    }
+
+    function countNightHours(start, end) {
       let count = 0;
-      for (let h = Math.ceil(startHour); h < endHour; h++) {
+      for (let h = Math.ceil(start); h < end; h++) {
         const hour = h % 24;
-        if (hour >= 22 || hour < 6) {
-          count++;
-        }
+        if (hour >= 22 || hour < 6) count++;
       }
       return count;
     }
 
-    function toggleAlternateDriver() {
-      document.getElementById('alternateDriverInputs').style.display =
-        document.getElementById('hasAlternateDriver').checked ? 'block' : 'none';
-    }
-
-    function calculateBusCharge() {
+    function calculate() {
       const timeRate = Number(document.getElementById('timeRate').value);
       const distanceRate = Number(document.getElementById('distanceRate').value);
-      const deadheadDistance = Number(document.getElementById('deadheadDistance').value);
-      const realDistance = Number(document.getElementById('realDistance').value);
-      const departureTime = normalizeTimeInput(document.getElementById('departureTime').value.trim());
-      const returnTime = normalizeTimeInput(document.getElementById('returnTime').value.trim());
-      const hasAltDriver = document.getElementById('hasAlternateDriver').checked;
-      const altDistanceRate = hasAltDriver ? Number(document.getElementById('alternateDistanceRate').value) : 0;
-      const altTimeRate = hasAltDriver ? Number(document.getElementById('alternateTimeRate').value) : 0;
+      const altOn = document.getElementById('hasAltDriver').checked;
+      const altTimeRate = altOn ? Number(document.getElementById('altTimeRate').value) : 0;
+      const altDistanceRate = altOn ? Number(document.getElementById('altDistanceRate').value) : 0;
 
-      if (!timeRate || !distanceRate || !deadheadDistance || !realDistance || !departureTime || !returnTime) {
-        alert('すべての項目を正しく入力してください。');
+      if (!timeRate || !distanceRate) {
+        alert('料金単価を入力してください');
         return;
       }
 
-      const startHour = parseTimeToDecimalHours(departureTime);
-      const endHour = parseTimeToDecimalHours(returnTime);
-      if (endHour <= startHour) {
-        alert("帰庫時間は出庫時間より後にしてください。");
-        return;
+      let total = 0;
+      let result = '';
+
+      for (let i = 1; i <= 5; i++) {
+        const d = Number(document.getElementById('deadhead' + i).value);
+        const r = Number(document.getElementById('real' + i).value);
+        const s = document.getElementById('start' + i).value;
+        const e = document.getElementById('end' + i).value;
+        if (!d || !r || !s || !e) continue;
+
+        const sh = normalizeTime(s);
+        const eh = normalizeTime(e);
+        if (eh <= sh) {
+          alert(`${i}日目の帰庫時間は出庫時間より後にしてください`);
+          return;
+        }
+
+        let hours = roundByHalfHour(sh, eh) + 2;
+        if (hours < 5) hours = 5;
+        const km = Math.ceil((d + r) / 10) * 10;
+
+        const timeCharge = hours * timeRate;
+        const distanceCharge = km * distanceRate;
+        const altAdd = altOn ? (altTimeRate * hours + altDistanceRate * km) : 0;
+
+        const nightHours = countNightHours(sh, eh);
+        const nightTimeBase = nightHours * timeRate;
+        const nightAltTimeBase = altOn ? nightHours * altTimeRate : 0;
+        const nightSurcharge = Math.floor(nightTimeBase * 0.2) + Math.floor(nightAltTimeBase * 0.2);
+
+        const totalDay = timeCharge + distanceCharge + altAdd + nightSurcharge;
+        total += totalDay;
+
+        result += `${i}日目: ${hours}時間・${km}km → ${totalDay.toLocaleString()}円（交代加算含む）\n` +
+          `　↳ 時間制料金: ${hours}h × ${timeRate}円 = ${timeCharge.toLocaleString()}円\n` +
+          `　↳ 距離制料金: ${km}km × ${distanceRate}円 = ${distanceCharge.toLocaleString()}円\n`;
+
+        if (altOn) {
+          result += `　↳ 交代運転者（時間）: ${hours}h × ${altTimeRate}円 = ${(altTimeRate * hours).toLocaleString()}円\n` +
+                    `　↳ 交代運転者（距離）: ${km}km × ${altDistanceRate}円 = ${(altDistanceRate * km).toLocaleString()}円\n`;
+        }
+
+        result += `　↳ 深夜加算:\n` +
+                  `　　基本: ${nightHours}h × ${timeRate}円 × 20% = ${Math.floor(nightTimeBase * 0.2).toLocaleString()}円\n` +
+                  (altOn ? `　　交代: ${nightHours}h × ${altTimeRate}円 × 20% = ${Math.floor(nightAltTimeBase * 0.2).toLocaleString()}円\n` : '') +
+                  `　　合計: ${nightSurcharge.toLocaleString()}円\n\n`;
       }
 
-      let driveHours = Math.ceil(endHour - startHour);
-      driveHours += 2;
-      if (driveHours < 5) driveHours = 5;
+      result += `【合計】\n${total.toLocaleString()}円`;
+      document.getElementById('result').innerText = result;
 
-      const totalDistance = Math.ceil((deadheadDistance + realDistance) / 10) * 10;
-
-      const timeCharge = driveHours * timeRate;
-      const distanceCharge = totalDistance * distanceRate;
-      const altDistanceCharge = totalDistance * altDistanceRate;
-      const altTimeCharge = driveHours * altTimeRate;
-
-      const nightHours = countNightHours(startHour, endHour);
-      const nightBase = (timeRate + altDistanceRate) * nightHours; // ← 距離単価加算に修正
-      const nightSurcharge = Math.floor(nightBase * 0.2);
-
-      const total = timeCharge + distanceCharge + altDistanceCharge + altTimeCharge + nightSurcharge;
-
-      const resultText =
-        `【バス料金計算】\n` +
-        `運行時間: ${driveHours}時間（点検時間含む・最低5時間）\n` +
-        `時間制料金: ${driveHours}時間 × ${timeRate}円 = ${timeCharge.toLocaleString()}円\n` +
-        `距離制料金: ${totalDistance}km × ${distanceRate}円 = ${distanceCharge.toLocaleString()}円\n` +
-        (hasAltDriver
-          ? `\n【交代運転者加算】\n` +
-            `距離加算: ${totalDistance}km × ${altDistanceRate}円 = ${altDistanceCharge.toLocaleString()}円\n` +
-            `時間加算: ${driveHours}時間 × ${altTimeRate}円 = ${altTimeCharge.toLocaleString()}円\n`
-          : '') +
-        (nightHours > 0
-          ? `\n【深夜早朝加算】\n` +
-            `対象時間: ${nightHours}時間（22:00〜翌6:00）\n` +
-            `(${timeRate}円 + ${altDistanceRate}円) × ${nightHours}h = ${nightBase.toLocaleString()}円\n` +
-            `${nightBase.toLocaleString()}円 × 20% = ${nightSurcharge.toLocaleString()}円\n`
-          : '') +
-        `\n【最終合計】\n${total.toLocaleString()}円`;
-
-      document.getElementById('result').innerText = resultText;
+      history.unshift(result);
+      if (history.length > 10) history.pop();
+      localStorage.setItem('busCalcHistory', JSON.stringify(history));
+      updateHistory();
+      saveInput();
     }
+
+    function saveInput() {
+      const values = {
+        timeRate: document.getElementById('timeRate').value,
+        distanceRate: document.getElementById('distanceRate').value,
+        altTimeRate: document.getElementById('altTimeRate').value,
+        altDistanceRate: document.getElementById('altDistanceRate').value,
+        hasAltDriver: document.getElementById('hasAltDriver').checked
+      };
+      for (let i = 1; i <= 5; i++) {
+        ['deadhead', 'real', 'start', 'end'].forEach(field => {
+          values[field + i] = document.getElementById(field + i).value;
+        });
+      }
+      localStorage.setItem('busCalcInput', JSON.stringify(values));
+    }
+
+    function updateHistory() {
+      document.getElementById('history').innerText = history.join('\n\n');
+    }
+
+    restoreInput();
+    updateHistory();
   </script>
 </body>
 </html>
