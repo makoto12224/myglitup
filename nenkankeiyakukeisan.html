@@ -46,10 +46,34 @@
 <br />
 <span style="font-size:16px;">貸切バス運賃計算も作成しました&rarr;<a href="https://myglitup.onrender.com/unchinkeisan.html">クリック</a></span><br />
 <br />
-<label for="targetDays">運行したい日数（日数）</label> <input id="targetDays" type="number" /> <label for="timeRate">時間制料金単価（円/時間）</label> <input id="timeRate" type="number" /> <label for="distanceRate">距離制料金単価（円/km）</label> <input id="distanceRate" type="number" /> <label for="deadheadDistance">回送距離（km）</label> <input id="deadheadDistance" type="number" /> <label for="realDistance">実車距離（km）</label> <input id="realDistance" type="number" /> <label for="deadheadTime">回送時間（hh:mm）</label> <input id="deadheadTime" type="time" /> <label for="realTime">実車時間（hh:mm）</label> <input id="realTime" type="time" /> <label for="workRate">実働率（小数第3位まで）</label> <input id="workRate" step="0.001" type="number" /><button onclick="calculateAnnualContract()">計算する</button>
+<label for="targetDays">運行したい日数（日数）</label> <input id="targetDays" type="number" />
+<label for="timeRate">時間制料金単価（円/時間）</label> <input id="timeRate" type="number" />
+<label for="distanceRate">距離制料金単価（円/km）</label> <input id="distanceRate" type="number" />
+<label for="deadheadDistance">回送距離（km）</label> <input id="deadheadDistance" type="number" />
+<label for="realDistance">実車距離（km）</label> <input id="realDistance" type="number" />
+<label for="deadheadTime">回送時間（hh:mm）</label> <input id="deadheadTime" type="time" />
+<label for="realTime">実車時間（hh:mm）</label> <input id="realTime" type="time" />
+<label for="workRate">実働率（小数第3位まで）</label> <input id="workRate" step="0.001" type="number" />
+<button onclick="calculateAnnualContract()">計算する</button>
 
 <div id="result">&nbsp;</div>
 <script>
+function saveInputValues() {
+  const fields = ["targetDays", "timeRate", "distanceRate", "deadheadDistance", "realDistance", "deadheadTime", "realTime", "workRate"];
+  const values = {};
+  fields.forEach(id => {
+    values[id] = document.getElementById(id).value;
+  });
+  localStorage.setItem("annualBusCalc", JSON.stringify(values));
+}
+
+function restoreInputValues() {
+  const saved = JSON.parse(localStorage.getItem("annualBusCalc") || '{}');
+  Object.entries(saved).forEach(([key, value]) => {
+    if (document.getElementById(key)) document.getElementById(key).value = value;
+  });
+}
+
 function calculateAnnualContract() {
   const targetDays = Number(document.getElementById('targetDays').value);
   const timeRate = Number(document.getElementById('timeRate').value);
@@ -64,6 +88,8 @@ function calculateAnnualContract() {
     alert('すべての項目を正しく入力してください。');
     return;
   }
+
+  saveInputValues();
 
   function timeToHours(timeStr) {
     const [h, m] = timeStr.split(':').map(Number);
@@ -107,4 +133,9 @@ function calculateAnnualContract() {
 
   document.getElementById('result').innerText = resultText;
 }
+
+restoreInputValues();
+document.querySelectorAll("input").forEach(el => {
+  el.addEventListener("input", saveInputValues);
+});
 </script>
