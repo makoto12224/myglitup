@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>バス料金計算（詳細表示＋正確な深夜加算）</title>
+  <title>バス料金計算</title>
   <style>
     body { font-family: Arial, sans-serif; background: #fff; padding: 20px; max-width: 900px; margin: auto; }
     h1 { text-align: center; font-size: 24px; }
@@ -20,7 +20,7 @@
   </style>
 </head>
 <body>
-  <h1>バス料金計算（詳細表示＋正確な深夜加算）</h1>
+  <h1>バス料金計算（詳細表示＋自動保存）</h1>
 
   <label>時間制料金単価（円/時間）</label>
   <input id="timeRate" type="number" />
@@ -28,7 +28,7 @@
   <label>距離制料金単価（円/km）</label>
   <input id="distanceRate" type="number" />
 
-  <label><input type="checkbox" id="hasAltDriver" onchange="toggleAltDriver()"> 交代運転者あり</label>
+  <label><input type="checkbox" id="hasAltDriver" onchange="toggleAltDriver(); saveInput();"> 交代運転者あり</label>
 
   <div id="altDriverInputs" style="display:none;">
     <label>交代運転者：時間加算単価（円/時間）</label>
@@ -62,8 +62,7 @@
     }
 
     function toggleAltDriver() {
-      document.getElementById('altDriverInputs').style.display =
-        document.getElementById('hasAltDriver').checked ? 'block' : 'none';
+      document.getElementById('altDriverInputs').style.display = document.getElementById('hasAltDriver').checked ? 'block' : 'none';
     }
 
     function normalizeTime(t) {
@@ -175,12 +174,31 @@
       localStorage.setItem('busCalcInput', JSON.stringify(values));
     }
 
+    function restoreInput() {
+      ['timeRate', 'distanceRate', 'altTimeRate', 'altDistanceRate'].forEach(id => {
+        if (savedValues[id]) document.getElementById(id).value = savedValues[id];
+      });
+      document.getElementById('hasAltDriver').checked = savedValues.hasAltDriver || false;
+      toggleAltDriver();
+      for (let i = 1; i <= 5; i++) {
+        ['deadhead', 'real', 'start', 'end'].forEach(field => {
+          const id = field + i;
+          if (savedValues[id]) document.getElementById(id).value = savedValues[id];
+        });
+      }
+    }
+
     function updateHistory() {
       document.getElementById('history').innerText = history.join('\n\n');
     }
 
     restoreInput();
     updateHistory();
+
+    // ✅ 自動保存機能
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", saveInput);
+    });
   </script>
 </body>
 </html>
