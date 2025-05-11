@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>バス料金計算（詳細表示＋自動保存）</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; padding: 20px; max-width: 900px; margin: auto; }
+    h1 { text-align: center; font-size: 24px; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    .day-group { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    input[type="text"], input[type="number"] {
+      width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box;
+    }
+    button { width: 100%; padding: 10px; font-size: 18px; margin: 20px 0; cursor: pointer; }
+    #result, #history {
+      font-size: 16px; margin-top: 20px; white-space: pre-line;
+      background-color: #f0f0f0; padding: 20px; border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>バス料金計算（詳細表示＋自動保存）</h1>
+
+  <label>時間制料金単価（円/時間）</label>
+  <input id="timeRate" type="number" />
+
+  <label>距離制料金単価（円/km）</label>
+  <input id="distanceRate" type="number" />
+
+  <label><input type="checkbox" id="hasAltDriver" onchange="toggleAltDriver(); saveInput();"> 交代運転者あり</label>
+
+  <div id="altDriverInputs" style="display:none;">
+    <label>交代運転者：時間加算単価（円/時間）</label>
+    <input id="altTimeRate" type="number" />
+    <label>交代運転者：距離加算単価（円/km）</label>
+    <input id="altDistanceRate" type="number" />
+  </div>
+
+  <div id="dayInputs"></div>
+
+  <button onclick="calculate()">計算する</button>
+
+  <div id="result"></div>
+  <h3>過去の計算履歴（最大10件）</h3>
+  <div id="history"></div>
+
+  <script>
+    const dayInputs = document.getElementById('dayInputs');
+    const savedValues = JSON.parse(localStorage.getItem('busCalcInput') || '{}');
+    const history = JSON.parse(localStorage.getItem('busCalcHistory') || '[]');
+
+    for (let i = 1; i <= 5; i++) {
+      const g = document.createElement('div');
+      g.className = 'day-group';
+      g.innerHTML = `<h3>${i}日目</h3>
+        <label>回送距離（km）</label><input type="number" id="deadhead${i}" />
+        <label>実車距離（km）</label><input type="number" id="real${i}" />
+        <label>出庫時間（例: 25:00）</label><input type="text" id="start${i}" />
+        <label>帰庫時間（例: 29:30）</label><input type="text" id="end${i}" />`;
+      dayInputs.appendChild(g);
+    }
+
+    function toggleAltDriver() {
+      document.getElementById('altDriverInputs').style.display = document.getElementById('hasAltDriver').checked ? 'block' : 'none';
+    }
+
+    function normalizeTime(t) {
+      const parts = t.replace(/[^0-9]/g, '').padStart(4, '0');
+      const h = parseInt(parts.slice(0, 2), 10);
+      const m = parseInt(parts.slice(2), 10);
+      return h + m / 60;
+    }
+
+    function roundTimeForCalculation(time) {
+      const hour = Math.floor(time);
+      const minute = (time - hour) * 60;
+      if (minute < 30) {
+        return hour;
+      } else {
+        return hour + 1;
+      }
+    }
+
+    function countNightHoursExtended(startHourRaw, endHourRaw) {
+      let nightHours = 0;
+
+      const startHourCalc = roundTimeForCalculation(startHourRaw);
+      const endHourCalc = roundTimeForCalculation(endHourRaw);
+
+      const extendedStart = startHourCalc - 1;
+      const extendedEnd = endHourCalc + 1;
+
+      for (let h = Math.floor(extendedStart); h < extendedEnd; h++) {
+        const hour = h % 24;
+        if (hour >= 22 || hour < 5) {
+          nightHours++;
+        }
+      }
+
+      return nightHours;
+    }
+
+    function calculate() {
+      const timeRate = Number(document.getElementById('timeRate').value);
+      const distanceRate = Number(document.getElementById('distanceRate').value);
+      const altOn = document.getElementById('hasAltDriver').checked;
+      const altTimeRate = altOn ? Number(document.getElementById('altTimeRate').value) : 0;
+      const altDistanceRate = altOn ? Number(document.getElementById('altDistanceRate').value) : 0;
+
+      if (!timeRate || !distanceRate) {
+        alert('料金単価を入力してください');
+        return;
+      }
+
+      let total = 0;
+      let result = '';
+
+      for (let i = 1; i <= 5; i++) {
+        const d = Number(document.getElementById('deadhead' + i).value);
+        const r = Number(document.getElementById('real' + i).value);
+        const s = document.getElementById('start' + i).value;
+        const e = document.getElementById('end' + i).value;
+        if (!d || !r || !s || !e) continue;
+
+        const sh = normalizeTime(s);
+        const eh = normalizeTime(e);
+        if (eh <= sh) {
+          alert(`${i}日目の帰庫時間は出庫時間より後にしてください`);
+          return;
+        }
+
+        const startHourCalc = roundTimeForCalculation(sh);
+        const endHourCalc = roundTimeForCalculation(eh);
+
+        let hours = (endHourCalc - startHourCalc) + 2;
+        if (hours < 5) hours = 5;
+
+        const km = Math.ceil((d + r) / 10) * 10;
+
+        const timeCharge = hours * timeRate;
+        const distanceCharge = km * distanceRate;
+        const altAdd = altOn ? (altTimeRate * hours + altDistanceRate * km) : 0;
+
+        const nightHours = countNightHoursExtended(sh, eh);
+        const nightTimeBase = nightHours * timeRate;
+        const nightAltTimeBase = altOn ? nightHours * altTimeRate : 0;
+        const nightSurcharge = Math.floor(nightTimeBase * 0.2) + Math.floor(nightAltTimeBase * 0.2);
+
+        const totalDay = timeCharge + distanceCharge + altAdd + nightSurcharge;
+        total += totalDay;
+
+        result += `${i}日目: ${hours}時間・${km}km (運賃計算上の拘束時間) → ${totalDay.toLocaleString()}円（交代加算含む）\n` +
+          `　↳ 運賃計算上の運行時間: ${endHourCalc - startHourCalc}時間\n` +
+          `　↳ 点検・点呼時間: 前後各1時間\n` +
+          `　↳ 時間制料金: ${hours}h × ${timeRate}円 = ${timeCharge.toLocaleString()}円\n` +
+          `　↳ 距離制料金: ${km}km × ${distanceRate}円 = ${distanceCharge.toLocaleString()}円\n`;
+
+        if (altOn) {
+          result += `　↳ 交代運転者（時間）: ${hours}h × ${altTimeRate}円 = ${(altTimeRate * hours).toLocaleString()}円\n` +
+            `　↳ 交代運転者（距離）: ${km}km × ${altDistanceRate}円 = ${(altDistanceRate * km).toLocaleString()}円\n`;
+        }
+
+        result += `　↳ 深夜加算(${nightHours}時間):\n` +
+          `　　基本: ${nightHours}h × ${timeRate}円 × 20% = ${Math.floor(nightTimeBase * 0.2).toLocaleString()}円\n` +
+          (altOn ? `　　交代: ${nightHours}h × ${altTimeRate}円 × 20% = ${Math.floor(nightAltTimeBase * 0.2).toLocaleString()}円\n` : '') +
+          `　　合計: ${nightSurcharge.toLocaleString()}円\n\n`;
+      }
+
+      result += `【合計】\n${total.toLocaleString()}円`;
+      document.getElementById('result').innerText = result;
+
+      history.unshift(result);
+      if (history.length > 10) history.pop();
+      localStorage.setItem('busCalcHistory', JSON.stringify(history));
+      updateHistory();
+      saveInput();
+    }
+
+    function saveInput() {
+      const values = {
+        timeRate: document.getElementById('timeRate').value,
+        distanceRate: document.getElementById('distanceRate').value,
+        altTimeRate: document.getElementById('altTimeRate').value,
+        altDistanceRate: document.getElementById('altDistanceRate').value,
+        hasAltDriver: document.getElementById('hasAltDriver').checked
+      };
+      for (let i = 1; i <= 5; i++) {
+        ['deadhead', 'real', 'start', 'end'].forEach(field => {
+          values[field + i] = document.getElementById(field + i).value;
+        });
+      }
+      localStorage.setItem('busCalcInput', JSON.stringify(values));
+    }
+
+    function restoreInput() {
+      ['timeRate', 'distanceRate', 'altTimeRate', 'altDistanceRate'].forEach(id => {
+        if (savedValues[id]) document.getElementById(id).value = savedValues[id];
+      });
+      document.getElementById('hasAltDriver').checked = savedValues.hasAltDriver || false;
+      toggleAltDriver();
+      for (let i = 1; i <= 5; i++) {
+        ['deadhead', 'real', 'start', 'end'].forEach(field => {
+          const id = field + i;
+          if (savedValues[id]) document.getElementById(id).value = savedValues[id];
+        });
+      }
+    }
+
+    function updateHistory() {
+      document.getElementById('history').innerText = history.join('\n\n');
+    }
+
+    restoreInput();
+    updateHistory();
+
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", saveInput);
+    });
+  </script>
+</body>
+</html>
