@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>eBayオーストラリア手数料計算ツール（記憶・差額逆ver）</title>
+  <style>
+    body { font-family: sans-serif; max-width: 620px; margin: 40px auto; background: #f7faff; padding: 32px; border-radius: 16px; box-shadow: 0 4px 16px #0001;}
+    label { display: block; margin: 18px 0 4px;}
+    input[type="number"] { width: 120px; padding: 4px;}
+    .result, .jpybox { background: #eef; margin-top: 22px; padding: 16px; border-radius: 8px; }
+    button { margin-top: 20px; padding: 8px 28px; font-size: 1em;}
+    .small { font-size: 0.9em; color: #666;}
+  </style>
+</head>
+<body>
+  <h2>eBayオーストラリア手数料計算（記憶＆国内差額比較付き）</h2>
+  <form id="calcForm" onsubmit="event.preventDefault(); calc();">
+    <label>販売額 (AUD)
+      <input type="number" id="price" step="0.01" min="0" required>
+    </label>
+    <label>広告比率 (%) <small>例: 17</small>
+      <input type="number" id="ad_rate" step="0.01" min="0" max="100" required>
+    </label>
+    <label>ファイナルバリューフィー比率 (%) <small>例: 12.18</small>
+      <input type="number" id="fvf_rate" step="0.01" min="0" max="100" required>
+    </label>
+    <hr>
+    <label>日本円レート (USD→JPY) <small>自動取得/手動修正可</small>
+      <input type="number" id="usd2jpy" step="0.01" min="0" required>
+      <span id="jpy_rate_area" class="small"></span>
+    </label>
+    <label>国内販売価格 (円) <small>日本国内で売るならの想定価格</small>
+      <input type="number" id="japan_price" step="1" min="0">
+    </label>
+    <button type="submit">計算</button>
+    <div id="rate_area" class="small" style="margin-top:10px;"></div>
+  </form>
+
+  <div class="result" id="result" style="display:none;"></div>
+  <div class="jpybox" id="jpybox" style="display:none;"></div>
+
+  <script>
+    let latestRate = null;
+    let latestJPY = null;
+
+    // ローカルストレージのkey
+    const KEY = "ebay_aus_fee_form";
+    // 入力値の保存
+    function saveInput() {
+      const obj = {
+        price: document.getElementById('price').value,
+        ad_rate: document.getElementById('ad_rate').value,
+        fvf_rate: document.getElementById('fvf_rate').value,
+        usd2jpy: document.getElementById('usd2jpy').value,
+        japan_price: document.getElementById('japan_price').value,
+      };
+      localStorage.setItem(KEY, JSON.stringify(obj));
+    }
+    // 入力値の読込
+    function loadInput() {
+      const str = localStorage.getItem(KEY);
+      if (str) {
+        try {
+          const obj = JSON.parse(str);
+          if(obj.price) document.getElementById('price').value = obj.price;
+          if(obj.ad_rate) document.getElementById('ad_rate').value = obj.ad_rate;
+          if(obj.fvf_rate) document.getElementById('fvf_rate').value = obj.fvf_rate;
+          if(obj.usd2jpy) document.getElementById('usd2jpy').value = obj.usd2jpy;
+          if(obj.japan_price) document.getElementById('japan_price').value = obj.japan_price;
+        } catch(e){}
+      }
+    }
+
+    // イベント付与
+    window.addEventListener("DOMContentLoaded", () => {
+      // 変更時に即保存
+      ['price','ad_rate','fvf_rate','usd2jpy','japan_price'].forEach(id=>{
+        document.getElementById(id).addEventListener('input', saveInput);
+      });
+      loadInput();
+    });
+
+    // AUD→USD
+    async function fetchRate() {
+      const area = document.getElementById('rate_area');
+      area.textContent = "AUD→USD為替レート取得中...";
+      try {
+        const res = await fetch("https://api.exchangerate.host/latest?base=AUD&symbols=USD");
+        const data = await res.json();
+        if (data && data.rates && data.rates.USD) {
+          latestRate = data.rates.USD;
+          area.textContent = `AUD→USD: 1 AUD = ${latestRate} USD （自動取得）`;
+        } else {
+          area.textContent = "AUD→USD為替レート取得に失敗しました。";
+        }
+      } catch (e) {
+        area.textContent = "AUD→USD為替レート取得エラー";
+      }
+    }
+    // USD→JPY
+    async function fetchJPY() {
+      const area = document.getElementById('jpy_rate_area');
+      area.textContent = "USD→JPY為替レート取得中...";
+      try {
+        const res = await fetch("https://api.exchangerate.host/latest?base=USD&symbols=JPY");
+        const data = await res.json();
+        if (data && data.rates && data.rates.JPY) {
+          latestJPY = data.rates.JPY;
+          document.getElementById('usd2jpy').value = latestJPY;
+          area.textContent = `（自動: 1 USD = ${latestJPY} 円）`;
+          saveInput(); // 取得直後にも保存
+        } else {
+          area.textContent = "USD→JPY為替レート取得に失敗しました。";
+        }
+      } catch (e) {
+        area.textContent = "USD→JPY為替レート取得エラー";
+      }
+    }
+
+    fetchRate();
+    fetchJPY();
+
+    function roundDown(val, digits = 2) {
+      let factor = Math.pow(10, digits);
+      return Math.floor(val * factor) / factor;
+    }
+
+    function calc() {
+      const price = parseFloat(document.getElementById('price').value);
+      const adRate = parseFloat(document.getElementById('ad_rate').value);
+      const fvfRate = parseFloat(document.getElementById('fvf_rate').value);
+      const usd2jpy = parseFloat(document.getElementById('usd2jpy').value);
+      const japanPrice = parseFloat(document.getElementById('japan_price').value) || 0;
+
+      // 固定値
+      const intlFeeRate = 1.35;
+      const discountRate = 0.4;
+      const fixedFee = 0.27;
+      const exchangeRate = latestRate ? latestRate : 0.6452; // AUD→USD
+
+      // 1. 10%加算・小数点2位切り捨て
+      const base = roundDown(price * 1.1, 2);
+
+      // 2. 広告費（+GST10%）
+      const adFee = roundDown(base * adRate / 100, 2);
+      const adFeeGST = roundDown(adFee * 1.1, 2);
+
+      // 3. 手数料合計（+GST10%）
+      const fvf = roundDown(base * fvfRate / 100, 2);
+      const intlFee = roundDown(base * intlFeeRate / 100, 2);
+      const discount = roundDown(base * discountRate / 100, 2);
+      const subtotal = fvf + intlFee - discount + fixedFee;
+      const totalFee = roundDown(subtotal * 1.1, 2);
+
+      // 4. 合計コスト（広告費+手数料）
+      const totalCost = roundDown(adFeeGST + totalFee, 2);
+
+      // 5. 受取金額
+      const receivedAUD = roundDown(price - totalCost, 2);
+      const receivedUSD = roundDown(receivedAUD * exchangeRate, 2);
+
+      // 6. USD→円
+      const receivedJPY = Math.floor(receivedUSD * usd2jpy);
+
+      // 7. 国内価格差額（差額=海外受取（円換算）−国内販売価格）
+      const diff = japanPrice > 0 ? receivedJPY - japanPrice : null;
+
+      // メイン計算結果
+      document.getElementById('result').style.display = "block";
+      document.getElementById('result').innerHTML =
+        `<b>計算結果：</b><br>
+        10%加算後（小数点2位まで）：<b>${base.toFixed(2)} AUD</b><br>
+        <br>
+        <b>広告費（+GST10%）：</b> ${adFeeGST.toFixed(2)} AUD<br>
+        <b>手数料合計（+GST10%）：</b> ${totalFee.toFixed(2)} AUD<br>
+        <b>合計コスト（広告費＋手数料）：</b> <b>${totalCost.toFixed(2)} AUD</b><br>
+        <br>
+        <b>最終受取金額：</b><br>
+        <b>${receivedAUD.toFixed(2)} AUD</b><br>
+        <b>${receivedUSD.toFixed(2)} USD</b>（AUD→USD: ${exchangeRate}）<br>
+        <b>${receivedJPY.toLocaleString()} 円</b>（USD→JPY: ${usd2jpy}）`;
+
+      // 国内価格比較
+      if (japanPrice > 0) {
+        document.getElementById('jpybox').style.display = "block";
+        document.getElementById('jpybox').innerHTML =
+          `<b>国内販売価格との差額</b><br>
+           海外販売受取（円換算）：<b>${receivedJPY.toLocaleString()} 円</b><br>
+           国内販売価格：<b>${japanPrice.toLocaleString()} 円</b><br>
+           <span style="font-size:1.2em;">差額：<b style="color:${diff>0?'#007700':'#c00'}">${diff>0?'+':''}${diff.toLocaleString()} 円</b></span>
+           <br><small>（海外受取−国内価格）</small>`;
+      } else {
+        document.getElementById('jpybox').style.display = "none";
+      }
+      saveInput();
+    }
+  </script>
+</body>
+</html>
