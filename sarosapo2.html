@@ -3,48 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>サロサポ / ジギョサポ｜オーダーメイドPC・SNSサポート</title>
+<title>サロサポ / ジギョサポ｜オーダーメイドPC・SNSサポート（レスポンシブ）</title>
 <style>
   :root{
-    --ink:#1f2328;
-    --muted:#5d6b7a;
-    --bg:#fff;
-    --brand1:#e9bfb0;   /* サロサポ */
-    --brand2:#b8d8ff;   /* ジギョサポ */
-    --pill:#f6f8fa;
-    --line:#e6e8eb;
-    --ok:#0ea5e9;
-    --accent:#111827;
+    --ink:#1f2328; --muted:#5d6b7a; --bg:#fff; --brand1:#e9bfb0; --brand2:#b8d8ff;
+    --pill:#f6f8fa; --line:#e6e8eb; --ok:#0ea5e9; --accent:#111827;
   }
-  html,body{margin:0;background:#f7f7f7;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.75;}
-  .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
-  nav{position:sticky;top:0;height:100vh;overflow:auto;background:#fff;border-right:1px solid var(--line);padding:18px 14px;}
-  .brand{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);}
-  .brand h1{font-size:16px;margin:0;}
-  .sub{font-size:12px;color:var(--muted);margin-bottom:14px;}
-  .menu a{display:block;padding:8px 10px;margin:4px 0;border-radius:8px;color:var(--ink);text-decoration:none;}
-  .menu a:hover{background:#f2f4f7;}
-  .menu a.active{background:#111827;color:#fff;}
-  main{padding:28px;max-width:1100px;margin:0 auto;}
-  section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 20px 22px;margin:14px 0;}
-  h2{margin:0 0 6px;font-size:22px;}
-  .lead{font-size:16px;color:var(--muted);margin:0 0 12px;}
-  /* hero */
-  .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center;border-left:8px solid var(--accent);}
-  .hero h2{font-size:28px;line-height:1.35;margin-bottom:8px;}
-  .badges .pill{display:inline-block;background:var(--pill);border:1px solid var(--line);padding:6px 10px;border-radius:999px;margin:4px 6px 0 0;font-size:12px;}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#f7f7f7;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.75;}
+
+  /* ===== Layout ===== */
+  .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+  nav{position:sticky;top:0;height:100vh;overflow:auto;background:#fff;border-right:1px solid var(--line);padding:18px 14px}
+  main{padding:28px;max-width:1100px;margin:0 auto}
+  section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 20px 22px;margin:14px 0}
+  h2{margin:0 0 6px;font-size:22px}
+  .lead{font-size:16px;color:var(--muted);margin:0 0 12px}
+
+  /* ===== Sidebar brand & menu ===== */
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+  .brand h1{font-size:16px;margin:0}
+  .sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .menu a{display:block;padding:8px 10px;margin:4px 0;border-radius:8px;color:var(--ink);text-decoration:none}
+  .menu a:hover{background:#f2f4f7}
+  .menu a.active{background:#111827;color:#fff}
+
+  /* ===== Hero ===== */
+  .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center;border-left:8px solid var(--accent)}
+  .hero h2{font-size:28px;line-height:1.35;margin-bottom:8px}
+  .badges .pill{display:inline-block;background:var(--pill);border:1px solid var(--line);padding:6px 10px;border-radius:999px;margin:4px 6px 0 0;font-size:12px}
   .cta{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
   .btn{appearance:none;border:1px solid var(--ink);background:#111827;color:#fff;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
   .btn.secondary{background:#fff;color:var(--ink)}
-  .note{font-size:12px;color:var(--muted);}
-  .qr{height:120px;border:2px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#9aa3ad;}
-  /* tabs */
-  .tabs{display:flex;gap:8px;margin:10px 0 8px;flex-wrap:wrap}
-  .tab{padding:8px 12px;border-radius:999px;border:1px solid var(--line);cursor:pointer;font-size:14px;background:#fff}
-  .tab.active{background:#111827;color:#fff;border-color:#111827}
-  .pane{display:none}
-  .pane.active{display:block}
+  .note{font-size:12px;color:var(--muted)}
+  .qr{height:120px;border:2px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#9aa3ad}
+
+  /* ===== Common cards/rows ===== */
   .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
   .card h3{margin:0 0 6px;font-size:16px}
@@ -53,28 +49,79 @@
   .flag{font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);display:inline-block;background:#fff}
   .flag.p1{background:var(--brand1)}
   .flag.p2{background:var(--brand2)}
-  /* accordion */
+
+  /* ===== Tabs (kept simple) ===== */
+  .tabs{display:flex;gap:8px;margin:10px 0 8px;flex-wrap:wrap}
+  .tab{padding:8px 12px;border-radius:999px;border:1px solid var(--line);cursor:pointer;font-size:14px;background:#fff}
+  .tab.active{background:#111827;color:#fff;border-color:#111827}
+  .pane{display:none}
+  .pane.active{display:block}
+
+  /* ===== Accordion ===== */
   details{border:1px solid var(--line);border-radius:10px;padding:12px;margin:8px 0;background:#fff}
   details summary{cursor:pointer;font-weight:700}
-  /* stepper */
-  .steps{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+
+  /* ===== Stepper ===== */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .step{border:1px dashed var(--line);border-radius:12px;padding:12px;background:#fff;position:relative}
   .step .num{position:absolute;top:-10px;left:-10px;background:#111827;color:#fff;width:28px;height:28px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:700}
-  /* checklist */
+
+  /* ===== Checklist/Planner ===== */
   .checkwrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .check{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
   .check label{display:block;margin:6px 0}
   .suggest{border:1px solid var(--line);border-radius:12px;background:#fcfdfd;padding:12px}
   .suggest h4{margin:0 0 6px}
-  /* faq */
+
+  /* ===== FAQ ===== */
   .qa{display:grid;gap:8px}
   .qa .q{font-weight:700}
-  /* sticky footer */
+
+  /* ===== Sticky footer ===== */
   .footer{color:#66728a;font-size:12px;text-align:center;margin:16px 0 40px}
-  /* print */
+
+  /* ===== Top bar for mobile ===== */
+  .topbar{display:none;position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
+  .topbar .inner{display:flex;align-items:center;justify-content:space-between;padding:10px 14px}
+  .hamburger{background:transparent;border:0;padding:8px;cursor:pointer}
+  .hamburger span{display:block;width:22px;height:2px;background:#111827;margin:5px 0;border-radius:2px}
+
+  /* ===== Responsive breakpoints ===== */
+  /* Large tablets and down */
+  @media (max-width: 1100px){
+    main{padding:20px}
+    .hero{grid-template-columns:1fr}
+  }
+  /* Tablets */
+  @media (max-width: 960px){
+    .row{grid-template-columns:1fr}
+    .steps{grid-template-columns:repeat(2,1fr)}
+    .checkwrap{grid-template-columns:1fr}
+  }
+  /* Mobile: collapse sidebar into topbar menu */
+  @media (max-width: 760px){
+    .layout{grid-template-columns:1fr}
+    nav{position:fixed;inset:auto 0 0 0;height:auto;max-height:65vh;transform:translateY(100%);
+        transition:transform .25s ease;box-shadow:0 -8px 24px rgba(0,0,0,.08);border-right:none;border-top:1px solid var(--line);padding:14px}
+    nav.open{transform:translateY(0)}
+    .topbar{display:block}
+    .brand h1{font-size:14px}
+    .sub{display:none}
+    main{padding:16px}
+    section{border-radius:12px}
+    .hero h2{font-size:22px}
+    .btn{width:100%}
+  }
+  /* Extra small */
+  @media (max-width: 400px){
+    .hero h2{font-size:20px}
+    .badges .pill{font-size:11px}
+  }
+
+  /* ===== Print ===== */
   @media print{
     .layout{grid-template-columns:1fr}
-    nav{display:none}
+    nav,.topbar{display:none}
     main{padding:0}
     section{break-inside:avoid}
   }
@@ -82,7 +129,18 @@
 </head>
 <body>
 <div class="layout">
-  <nav>
+  <!-- Mobile top bar -->
+  <div class="topbar" aria-hidden="false">
+    <div class="inner">
+      <div class="brand"><span class="dot"></span><h1>サロサポ / ジギョサポ</h1></div>
+      <button class="hamburger" aria-label="メニュー" aria-expanded="false" aria-controls="mobileNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Sidebar (becomes bottom sheet on mobile) -->
+  <nav id="mobileNav" aria-label="サイドメニュー">
     <div class="brand"><span class="dot"></span><h1>サロサポ / ジギョサポ</h1></div>
     <div class="sub">初心者向け・オーダーメイドPC・SNS講座</div>
     <div class="menu">
@@ -97,6 +155,7 @@
       <a href="#contact">お問い合わせ</a>
     </div>
   </nav>
+
   <main>
     <section id="hero" class="hero">
       <div>
@@ -353,7 +412,7 @@
 </div>
 
 <script>
-  // active menu link on scroll
+  // Active menu link on scroll
   const links = document.querySelectorAll('.menu a');
   const sections = [...links].map(a => document.querySelector(a.getAttribute('href')));
   const onScroll = () => {
@@ -365,7 +424,7 @@
   };
   document.addEventListener('scroll', onScroll);
 
-  // planner suggestion logic
+  // Planner suggestion logic
   function updateSuggest(){
     const wants = [...document.querySelectorAll('.want:checked')].map(x=>x.value);
     const goals = [...document.querySelectorAll('.goal:checked')].map(x=>x.value);
@@ -375,7 +434,6 @@
       return;
     }
     let lines = [];
-    // rule-of-thumb suggestions
     if(wants.includes('Instagram強化')) lines.push('▶ Instagramプロフィール最適化 + リール1本を一緒に作成');
     if(wants.includes('LINE公式の設定')) lines.push('▶ LINEあいさつ / クーポン自動化 + 予約導線の整備');
     if(wants.includes('Canvaでチラシ作成')) lines.push('▶ Canvaで告知テンプレ3種（正方形 / A4 / ストーリーズ）');
@@ -394,7 +452,7 @@
     el.addEventListener('change', updateSuggest);
   });
 
-  // smooth scroll
+  // Smooth scroll + close mobile nav after click
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
     a.addEventListener('click', e=>{
       const id = a.getAttribute('href');
@@ -402,8 +460,27 @@
         e.preventDefault();
         document.querySelector(id).scrollIntoView({behavior:'smooth',block:'start'});
         history.replaceState(null,null,id);
+        closeMobileNav();
       }
     });
+  });
+
+  // Mobile nav toggle
+  const nav = document.getElementById('mobileNav');
+  const hb = document.querySelector('.hamburger');
+  function openMobileNav(){ nav.classList.add('open'); hb.setAttribute('aria-expanded','true'); }
+  function closeMobileNav(){ nav.classList.remove('open'); hb.setAttribute('aria-expanded','false'); }
+  hb?.addEventListener('click', ()=>{
+    if(nav.classList.contains('open')){ closeMobileNav(); } else { openMobileNav(); }
+  });
+
+  // Close nav on outside click (only on small screens)
+  document.addEventListener('click', (e)=>{
+    if(window.matchMedia('(max-width: 760px)').matches){
+      const withinNav = nav.contains(e.target);
+      const isButton = hb.contains(e.target);
+      if(!withinNav && !isButton){ closeMobileNav(); }
+    }
   });
 </script>
 </body>
