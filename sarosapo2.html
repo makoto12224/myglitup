@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サロサポ / ジギョサポ｜オーダーメイドPC・SNSサポート</title>
+<style>
+  :root{
+    --ink:#1f2328;
+    --muted:#5d6b7a;
+    --bg:#fff;
+    --brand1:#e9bfb0;   /* サロサポ */
+    --brand2:#b8d8ff;   /* ジギョサポ */
+    --pill:#f6f8fa;
+    --line:#e6e8eb;
+    --ok:#0ea5e9;
+    --accent:#111827;
+  }
+  html,body{margin:0;background:#f7f7f7;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.75;}
+  .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+  nav{position:sticky;top:0;height:100vh;overflow:auto;background:#fff;border-right:1px solid var(--line);padding:18px 14px;}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);}
+  .brand h1{font-size:16px;margin:0;}
+  .sub{font-size:12px;color:var(--muted);margin-bottom:14px;}
+  .menu a{display:block;padding:8px 10px;margin:4px 0;border-radius:8px;color:var(--ink);text-decoration:none;}
+  .menu a:hover{background:#f2f4f7;}
+  .menu a.active{background:#111827;color:#fff;}
+  main{padding:28px;max-width:1100px;margin:0 auto;}
+  section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 20px 22px;margin:14px 0;}
+  h2{margin:0 0 6px;font-size:22px;}
+  .lead{font-size:16px;color:var(--muted);margin:0 0 12px;}
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center;border-left:8px solid var(--accent);}
+  .hero h2{font-size:28px;line-height:1.35;margin-bottom:8px;}
+  .badges .pill{display:inline-block;background:var(--pill);border:1px solid var(--line);padding:6px 10px;border-radius:999px;margin:4px 6px 0 0;font-size:12px;}
+  .cta{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+  .btn{appearance:none;border:1px solid var(--ink);background:#111827;color:#fff;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+  .btn.secondary{background:#fff;color:var(--ink)}
+  .note{font-size:12px;color:var(--muted);}
+  .qr{height:120px;border:2px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#9aa3ad;}
+  /* tabs */
+  .tabs{display:flex;gap:8px;margin:10px 0 8px;flex-wrap:wrap}
+  .tab{padding:8px 12px;border-radius:999px;border:1px solid var(--line);cursor:pointer;font-size:14px;background:#fff}
+  .tab.active{background:#111827;color:#fff;border-color:#111827}
+  .pane{display:none}
+  .pane.active{display:block}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+  .card h3{margin:0 0 6px;font-size:16px}
+  ul.slim{margin:6px 0 6px 20px}
+  li{margin:4px 0}
+  .flag{font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);display:inline-block;background:#fff}
+  .flag.p1{background:var(--brand1)}
+  .flag.p2{background:var(--brand2)}
+  /* accordion */
+  details{border:1px solid var(--line);border-radius:10px;padding:12px;margin:8px 0;background:#fff}
+  details summary{cursor:pointer;font-weight:700}
+  /* stepper */
+  .steps{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+  .step{border:1px dashed var(--line);border-radius:12px;padding:12px;background:#fff;position:relative}
+  .step .num{position:absolute;top:-10px;left:-10px;background:#111827;color:#fff;width:28px;height:28px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:700}
+  /* checklist */
+  .checkwrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .check{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+  .check label{display:block;margin:6px 0}
+  .suggest{border:1px solid var(--line);border-radius:12px;background:#fcfdfd;padding:12px}
+  .suggest h4{margin:0 0 6px}
+  /* faq */
+  .qa{display:grid;gap:8px}
+  .qa .q{font-weight:700}
+  /* sticky footer */
+  .footer{color:#66728a;font-size:12px;text-align:center;margin:16px 0 40px}
+  /* print */
+  @media print{
+    .layout{grid-template-columns:1fr}
+    nav{display:none}
+    main{padding:0}
+    section{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav>
+    <div class="brand"><span class="dot"></span><h1>サロサポ / ジギョサポ</h1></div>
+    <div class="sub">初心者向け・オーダーメイドPC・SNS講座</div>
+    <div class="menu">
+      <a href="#hero" class="active">ホーム</a>
+      <a href="#who">対象と価値</a>
+      <a href="#service">できること一覧</a>
+      <a href="#cases">ケーススタディ</a>
+      <a href="#flow">学びの流れ</a>
+      <a href="#facility">設備と差別化</a>
+      <a href="#planner">あなた専用プラン作成</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">お問い合わせ</a>
+    </div>
+  </nav>
+  <main>
+    <section id="hero" class="hero">
+      <div>
+        <h2>初心者向け・<span style="background:linear-gradient(transparent 60%, #fff1e8 60%)">あなた専用サポート</span>の<br>オーダーメイドPC・SNS講座</h2>
+        <p class="lead">「知りたいことから始める」。サロンも小さなお店も、<b>マンツーマン</b>でその場で一緒に作業。夜・深夜もOK。授業後は<b>動画フォロー</b>で安心。</p>
+        <div class="badges">
+          <span class="pill">完全マンツーマン</span>
+          <span class="pill">オーダーメイド</span>
+          <span class="pill">LINE質問 & 動画フォロー</span>
+          <span class="pill">デスクトップ持ち込み可</span>
+          <span class="pill">新築の静かな教室</span>
+        </div>
+        <div class="cta">
+          <a class="btn" href="#contact">60分の無料個別相談へ</a>
+          <a class="btn secondary" href="#service">できることを見てみる</a>
+        </div>
+        <p class="note">※価格表記はチラシでは非表示。個別相談で最適プランをご提案します。</p>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="card">
+            <div class="flag p1">サロサポ（サロン向け）</div>
+            <h3>ブランディングと発信を「あなたらしく」</h3>
+            <ul class="slim">
+              <li>Instagram：フィード / ストーリー / リール</li>
+              <li>Canva：メニュー・告知・バナー作成</li>
+              <li>LINE公式：自動応答 / クーポン / 予約導線</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="flag p2">ジギョサポ（小規模事業向け）</div>
+            <h3>集客に直結。「見つけてもらえる」お店へ</h3>
+            <ul class="slim">
+              <li>MEO：Googleビジネスプロフィール最適化</li>
+              <li>SNS：施工事例・商品投稿を仕組み化</li>
+              <li>Canva：POP / チラシ / メニュー制作</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="who">
+      <h2>対象と価値</h2>
+      <p class="lead">「パソコンが苦手…」でも大丈夫。<b>明日の投稿・設定</b>まで一緒にやるから、帰る頃には形になっています。</p>
+      <div class="row">
+        <div class="card">
+          <h3>こんな方に</h3>
+          <ul class="slim">
+            <li>サロン・個店のオーナー／店長（PC初心者歓迎）</li>
+            <li>SNSやLINEを始めたいけど、何からやるか迷っている</li>
+            <li>会場セミナーは合わない。自分のPC環境で学びたい</li>
+            <li>昼は忙しい。夜・深夜に落ち着いて学びたい</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>得られる価値</h3>
+          <ul class="slim">
+            <li>店舗・サービスが<b>ネットで見つけてもらえる</b>ようになる</li>
+            <li>自分で画像・告知・クーポンを<b>作って配信</b>できる</li>
+            <li>「わからない」を放置しない。<b>動画フォロー</b>で定着</li>
+            <li><b>あなた専用の進め方</b>でムダなく学べる</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="service">
+      <h2>できること一覧（クリックで詳細）</h2>
+      <p class="lead">一律講座ではありません。必要な項目だけ選び、ゴールから逆算して進めます。</p>
+
+      <details open>
+        <summary>SNS運用（Instagram / Facebook / X）</summary>
+        <ul class="slim">
+          <li>プロフィール最適化（肩書・導線・ハイライト）</li>
+          <li>フィード / ストーリー / リールの「型」作成</li>
+          <li>投稿カレンダー（週2回など）とテンプレ配布</li>
+          <li>ハッシュタグ / 地域タグ設計とリーチ分析</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>LINE公式アカウント</summary>
+        <ul class="slim">
+          <li>開設・権限設定・メニュー設計</li>
+          <li>あいさつ / 予約 / クーポン自動化の導線</li>
+          <li>タグ付け・簡易顧客管理 / セグメント配信</li>
+          <li>Instagram・Googleとの連携導線</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Canva（画像・チラシ・メニュー・POP）</summary>
+        <ul class="slim">
+          <li>ブランド色・フォントの統一（見本帳を作成）</li>
+          <li>用途別テンプレ（告知・ビフォーアフター・求人）</li>
+          <li>印刷入稿データの作り方</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>MEO（Googleビジネスプロフィール）</summary>
+        <ul class="slim">
+          <li>登録・カテゴリ最適化・営業時間・サービス登録</li>
+          <li>写真運用：シーン別の撮り方 / アップ頻度</li>
+          <li>クチコミ導線と返信テンプレ</li>
+          <li>検索で上位を狙うためのチェックリスト</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>PC基礎（超初心者対応）</summary>
+        <ul class="slim">
+          <li>電源・ログイン・メール・ファイル整理</li>
+          <li>安全対策（迷惑メール / ウイルス / バックアップ）</li>
+          <li>ショートカット活用で操作を時短</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>購入・買い替えサポート（古物商）</summary>
+        <ul class="slim">
+          <li>用途別のPC選定（写真編集 / 事務 / SNS）</li>
+          <li>当社仕入れ販売 / 下取り / 整備再販に対応</li>
+          <li>受講前セットアップ：初期設定・必須アプリ導入</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="cases">
+      <h2>ケーススタディ（実例イメージ）</h2>
+      <div class="row">
+        <div class="card">
+          <div class="flag p1">サロサポ</div>
+          <h3>ネイルサロン：Instagramから予約が毎週2件</h3>
+          <p class="lead">プロフィールとリールの「見本」を一緒に作成。ストーリーズはテンプレで時短。</p>
+          <ul class="slim">
+            <li>Day1：ビジュアル統一＆プロフィール改修</li>
+            <li>Day2：リール2本を一緒に撮影・編集</li>
+            <li>Day3：ハイライト整備 / 予約導線をLINEに接続</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="flag p2">ジギョサポ</div>
+          <h3>工務店：施工事例の発信で問合せ増</h3>
+          <p class="lead">Googleマップを整備しつつ、週1で事例投稿。写真の撮り方もレクチャー。</p>
+          <ul class="slim">
+            <li>Day1：GBP登録 / カテゴリ / サービス登録</li>
+            <li>Day2：事例テンプレ作成（Canva）</li>
+            <li>Day3：クチコミ導線 / 返信テンプレ整備</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="flow">
+      <h2>学びの流れ</h2>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><b>LINEで簡単アンケート</b><br>「今どこが困っているか」を3分で共有。</div>
+        <div class="step"><div class="num">2</div><b>無料個別相談（60分）</b><br>ゴールと優先度を決め、初回の作業内容を確定。</div>
+        <div class="step"><div class="num">3</div><b>マンツーマン講座</b><br>各回2時間。毎回「形が残る」アウトプット。</div>
+        <div class="step"><div class="num">4</div><b>動画フォロー</b><br>講座後の疑問は画面録画で解説。定着まで伴走。</div>
+      </div>
+    </section>
+
+    <section id="facility">
+      <h2>設備と差別化</h2>
+      <div class="row">
+        <div class="card">
+          <h3>学びやすい環境</h3>
+          <ul class="slim">
+            <li>新築アパートの一室・静かな教室</li>
+            <li>モニター複数台で並べて操作</li>
+            <li>デスクトップPC持ち込みOK</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>なぜ会場型ではなく教室型？</h3>
+          <p>会場セミナーはノートPC前提で「自分の環境」とズレがち。ここでは普段の環境で学ぶので、<b>翌日から同じ手順で再現</b>できます。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="planner">
+      <h2>あなた専用プランをその場で作る（体験ツール）</h2>
+      <p class="lead">気になる項目にチェックすると、下に「おすすめ初回メニュー」が出ます。</p>
+      <div class="checkwrap">
+        <div class="check">
+          <h3>学びたいこと</h3>
+          <label><input type="checkbox" class="want" value="Instagram強化"> Instagram強化</label>
+          <label><input type="checkbox" class="want" value="LINE公式の設定"> LINE公式の設定</label>
+          <label><input type="checkbox" class="want" value="Canvaでチラシ作成"> Canvaでチラシ作成</label>
+          <label><input type="checkbox" class="want" value="MEO（Googleマップ最適化）"> MEO（Googleマップ最適化）</label>
+          <label><input type="checkbox" class="want" value="PCの基礎操作"> PCの基礎操作</label>
+          <label><input type="checkbox" class="want" value="写真の撮り方"> 写真の撮り方</label>
+        </div>
+        <div class="check">
+          <h3>目的</h3>
+          <label><input type="checkbox" class="goal" value="予約を増やしたい"> 予約を増やしたい</label>
+          <label><input type="checkbox" class="goal" value="問い合わせを増やしたい"> 問い合わせを増やしたい</label>
+          <label><input type="checkbox" class="goal" value="リピーターを増やしたい"> リピーターを増やしたい</label>
+          <label><input type="checkbox" class="goal" value="手間を減らしたい"> 手間を減らしたい</label>
+        </div>
+      </div>
+      <div class="suggest" id="suggestBox">
+        <h4>おすすめ初回メニュー</h4>
+        <div id="suggestText" class="lead">左のチェックを入れると自動で提案が表示されます。</div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <h2>よくある質問</h2>
+      <div class="qa">
+        <div class="card">
+          <div class="q">Q. パソコンが無いのですが、受講できますか？</div>
+          <div>A. 可能です。購入前の相談から一緒に行い、必要なら当社で仕入れ・初期設定までサポートします。買い替えの場合の下取りにも対応します。</div>
+        </div>
+        <div class="card">
+          <div class="q">Q. 価格はどこで確認できますか？</div>
+          <div>A. 価格は個別相談時にご案内します。まずは60分の無料個別相談をご利用ください。</div>
+        </div>
+        <div class="card">
+          <div class="q">Q. 夜しか時間が取れません。</div>
+          <div>A. 夜・深夜枠をご用意しています。営業後でも無理なく通えます。</div>
+        </div>
+        <div class="card">
+          <div class="q">Q. 動画の使い回しですか？</div>
+          <div>A. いいえ。質問内容に合わせて毎回新しく画面録画＋音声でお渡しします（完全オーダーメイド）。</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>お問い合わせ</h2>
+      <div class="row">
+        <div class="card">
+          <h3>無料個別相談（60分）</h3>
+          <p>LINEで「無料相談 希望」と送ってください。日程候補をお送りします。</p>
+          <div class="qr">← ここにLINEのQRコード画像を入れてください</div>
+        </div>
+        <div class="card">
+          <h3>教室の場所</h3>
+          <p>新築アパートの一室（住所はご予約後にご案内します）</p>
+          <ul class="slim">
+            <li>駐車可／静かな環境／モニター複数</li>
+            <li>デスクトップPC持ち込みOK</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">© サロサポ & ジギョサポ デジタル教室</div>
+  </main>
+</div>
+
+<script>
+  // active menu link on scroll
+  const links = document.querySelectorAll('.menu a');
+  const sections = [...links].map(a => document.querySelector(a.getAttribute('href')));
+  const onScroll = () => {
+    const pos = window.scrollY + 120;
+    let active = 0;
+    sections.forEach((sec,i)=>{ if(sec && sec.offsetTop <= pos) active = i; });
+    links.forEach(l => l.classList.remove('active'));
+    links[active]?.classList.add('active');
+  };
+  document.addEventListener('scroll', onScroll);
+
+  // planner suggestion logic
+  function updateSuggest(){
+    const wants = [...document.querySelectorAll('.want:checked')].map(x=>x.value);
+    const goals = [...document.querySelectorAll('.goal:checked')].map(x=>x.value);
+    const out = document.getElementById('suggestText');
+    if(wants.length===0 && goals.length===0){
+      out.textContent = "左のチェックを入れると自動で提案が表示されます。";
+      return;
+    }
+    let lines = [];
+    // rule-of-thumb suggestions
+    if(wants.includes('Instagram強化')) lines.push('▶ Instagramプロフィール最適化 + リール1本を一緒に作成');
+    if(wants.includes('LINE公式の設定')) lines.push('▶ LINEあいさつ / クーポン自動化 + 予約導線の整備');
+    if(wants.includes('Canvaでチラシ作成')) lines.push('▶ Canvaで告知テンプレ3種（正方形 / A4 / ストーリーズ）');
+    if(wants.includes('MEO（Googleマップ最適化）')) lines.push('▶ Googleビジネスプロフィール登録 + カテゴリ / サービス登録');
+    if(wants.includes('PCの基礎操作')) lines.push('▶ メール・ファイル整理・バックアップの基礎');
+    if(wants.includes('写真の撮り方')) lines.push('▶ 被写体の明るさ / 構図 / 連携アプリでの簡単レタッチ');
+
+    if(goals.includes('予約を増やしたい')) lines.push('◎ 予約増対策：リール + ストーリーズ誘導 + LINEメニュー改善');
+    if(goals.includes('問い合わせを増やしたい')) lines.push('◎ 問合せ増対策：MEO + 事例投稿テンプレ + 固定ハイライト');
+    if(goals.includes('リピーターを増やしたい')) lines.push('◎ リピーター：クーポン自動配布 + タグ配信 + 再来訴求テンプレ');
+    if(goals.includes('手間を減らしたい')) lines.push('◎ 時短設計：投稿カレンダー + テンプレ化 + 画像素材の共通化');
+
+    out.innerHTML = lines.join('<br>');
+  }
+  document.querySelectorAll('.want,.goal').forEach(el=>{
+    el.addEventListener('change', updateSuggest);
+  });
+
+  // smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id = a.getAttribute('href');
+      if(id.length>1){
+        e.preventDefault();
+        document.querySelector(id).scrollIntoView({behavior:'smooth',block:'start'});
+        history.replaceState(null,null,id);
+      }
+    });
+  });
+</script>
+</body>
+</html>
