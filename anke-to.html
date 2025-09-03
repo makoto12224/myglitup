@@ -1,0 +1,310 @@
+<!DOCTYPE html><html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>講習終了後アンケート</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+  <style>
+    :root{ --brand:#0ea5a4; --ink:#222; --muted:#666; --bg:#fff; --border:#e5e7eb; --star:#f5b301; --star-off:#cfcfcf; }
+    *{box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,Arial,sans-serif;margin:20px;line-height:1.6;color:var(--ink);background:var(--bg)}
+    h1{ text-align:center; font-size:22px; margin:0 0 6px }
+    .lead{ text-align:center; font-size:14px; color:var(--muted); margin:0 0 20px }
+    .question{ margin-bottom:18px }
+    label.q{ display:block; font-weight:600; margin-bottom:6px }/* ★ スター（ラジオ＋ラベル）: JSなしでも表示される安全版 */
+.stars{ display:flex; align-items:center; gap:8px; font-size:26px; user-select:none }
+.star-input{ position:absolute; left:-9999px; }
+.star-label{ color:var(--star-off); cursor:pointer; transition:transform .05s ease }
+.star-label:active{ transform:scale(.96) }
+.star-label.selected{ color:var(--star) }
+
+textarea{ width:100%; min-height:90px; border:1px solid var(--border); border-radius:8px; padding:10px }
+.row{ display:flex; justify-content:center; margin-top:16px }
+.btn{ display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border:none; border-radius:10px; background:var(--brand); color:#fff; font-weight:700; cursor:pointer; box-shadow:0 6px 18px rgba(14,165,164,.22) }
+.btn:hover{ filter:brightness(.95) }
+.thanks{ text-align:center; margin-top:18px; font-weight:700 }
+#summary{ display:none }
+table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px }
+th,td{ border:1px solid #ddd; padding:8px; vertical-align:top }
+th{ width:38%; background:#f7f7f7; text-align:left }
+.note{ color:var(--muted); font-size:12px; margin-top:6px; text-align:center }
+details.test{ margin:20px 0; border:1px dashed var(--border); border-radius:10px; padding:10px }
+
+/* 印刷フォールバック用：summaryだけ印刷 */
+@media print{ body.print-summary *{ display:none !important } body.print-summary #summary{ display:block !important } }
+
+  </style>
+</head>
+<body>
+  <h1>講習終了後アンケート</h1>
+  <p class="lead">講習にご参加いただきありがとうございました。以下の8項目を<span style="font-weight:700">5段階（★1〜5）</span>でご評価ください。最後に備考欄の自由記述もお願いします。</p>  <form id="survey" onsubmit="return false;" aria-label="講習終了後アンケート">
+    <div class="question">
+      <label class="q">1. 講習全体のわかりやすさ</label>
+      <div class="stars" data-q="q1">
+        <input class="star-input" type="radio" name="q1" id="q1-1" value="1"><label class="star-label" for="q1-1">★</label>
+        <input class="star-input" type="radio" name="q1" id="q1-2" value="2"><label class="star-label" for="q1-2">★</label>
+        <input class="star-input" type="radio" name="q1" id="q1-3" value="3"><label class="star-label" for="q1-3">★</label>
+        <input class="star-input" type="radio" name="q1" id="q1-4" value="4"><label class="star-label" for="q1-4">★</label>
+        <input class="star-input" type="radio" name="q1" id="q1-5" value="5"><label class="star-label" for="q1-5">★</label>
+      </div>
+    </div><div class="question">
+  <label class="q">2. 講師の説明のわかりやすさ</label>
+  <div class="stars" data-q="q2">
+    <input class="star-input" type="radio" name="q2" id="q2-1" value="1"><label class="star-label" for="q2-1">★</label>
+    <input class="star-input" type="radio" name="q2" id="q2-2" value="2"><label class="star-label" for="q2-2">★</label>
+    <input class="star-input" type="radio" name="q2" id="q2-3" value="3"><label class="star-label" for="q2-3">★</label>
+    <input class="star-input" type="radio" name="q2" id="q2-4" value="4"><label class="star-label" for="q2-4">★</label>
+    <input class="star-input" type="radio" name="q2" id="q2-5" value="5"><label class="star-label" for="q2-5">★</label>
+  </div>
+</div>
+
+<div class="question">
+  <label class="q">3. 資料のわかりやすさ</label>
+  <div class="stars" data-q="q3">
+    <input class="star-input" type="radio" name="q3" id="q3-1" value="1"><label class="star-label" for="q3-1">★</label>
+    <input class="star-input" type="radio" name="q3" id="q3-2" value="2"><label class="star-label" for="q3-2">★</label>
+    <input class="star-input" type="radio" name="q3" id="q3-3" value="3"><label class="star-label" for="q3-3">★</label>
+    <input class="star-input" type="radio" name="q3" id="q3-4" value="4"><label class="star-label" for="q3-4">★</label>
+    <input class="star-input" type="radio" name="q3" id="q3-5" value="5"><label class="star-label" for="q3-5">★</label>
+  </div>
+</div>
+
+<div class="question">
+  <label class="q">4. 講習時間の適切さ</label>
+  <div class="stars" data-q="q4">
+    <input class="star-input" type="radio" name="q4" id="q4-1" value="1"><label class="star-label" for="q4-1">★</label>
+    <input class="star-input" type="radio" name="q4" id="q4-2" value="2"><label class="star-label" for="q4-2">★</label>
+    <input class="star-input" type="radio" name="q4" id="q4-3" value="3"><label class="star-label" for="q4-3">★</label>
+    <input class="star-input" type="radio" name="q4" id="q4-4" value="4"><label class="star-label" for="q4-4">★</label>
+    <input class="star-input" type="radio" name="q4" id="q4-5" value="5"><label class="star-label" for="q4-5">★</label>
+  </div>
+</div>
+
+<div class="question">
+  <label class="q">5. 学んだ内容の実用性</label>
+  <div class="stars" data-q="q5">
+    <input class="star-input" type="radio" name="q5" id="q5-1" value="1"><label class="star-label" for="q5-1">★</label>
+    <input class="star-input" type="radio" name="q5" id="q5-2" value="2"><label class="star-label" for="q5-2">★</label>
+    <input class="star-input" type="radio" name="q5" id="q5-3" value="3"><label class="star-label" for="q5-3">★</label>
+    <input class="star-input" type="radio" name="q5" id="q5-4" value="4"><label class="star-label" for="q5-4">★</label>
+    <input class="star-input" type="radio" name="q5" id="q5-5" value="5"><label class="star-label" for="q5-5">★</label>
+  </div>
+</div>
+
+<div class="question">
+  <label class="q">6. 会場や環境の快適さ</label>
+  <div class="stars" data-q="q6">
+    <input class="star-input" type="radio" name="q6" id="q6-1" value="1"><label class="star-label" for="q6-1">★</label>
+    <input class="star-input" type="radio" name="q6" id="q6-2" value="2"><label class="star-label" for="q6-2">★</label>
+    <input class="star-input" type="radio" name="q6" id="q6-3" value="3"><label class="star-label" for="q6-3">★</label>
+    <input class="star-input" type="radio" name="q6" id="q6-4" value="4"><label class="star-label" for="q6-4">★</label>
+    <input class="star-input" type="radio" name="q6" id="q6-5" value="5"><label class="star-label" for="q6-5">★</label>
+  </div>
+</div>
+
+<div class="question">
+  <label class="q">7. 講習内容の充実度</label>
+  <div class="stars" data-q="q7">
+    <input class="star-input" type="radio" name="q7" id="q7-1" value="1"><label class="star-label" for="q7-1">★</label>
+    <input class="star-input" type="radio" name="q7" id="q7-2" value="2"><label class="star-label" for="q7-2">★</label>
+    <input class="star-input" type="radio" name="q7" id="q7-3" value="3"><label class="star-label" for="q7-3">★</label>
+    <input class="star-input" type="radio" name="q7" id="q7-4" value="4"><label class="star-label" for="q7-4">★</label>
+    <input class="star-input" type="radio" name="q7" id="q7-5" value="5"><label class="star-label" for="q7-5">★</label>
+  </div>
+</div>
+
+<div class="question">
+  <label class="q">8. 今後も参加したいと思う度合い</label>
+  <div class="stars" data-q="q8">
+    <input class="star-input" type="radio" name="q8" id="q8-1" value="1"><label class="star-label" for="q8-1">★</label>
+    <input class="star-input" type="radio" name="q8" id="q8-2" value="2"><label class="star-label" for="q8-2">★</label>
+    <input class="star-input" type="radio" name="q8" id="q8-3" value="3"><label class="star-label" for="q8-3">★</label>
+    <input class="star-input" type="radio" name="q8" id="q8-4" value="4"><label class="star-label" for="q8-4">★</label>
+    <input class="star-input" type="radio" name="q8" id="q8-5" value="5"><label class="star-label" for="q8-5">★</label>
+  </div>
+</div>
+
+<div class="question">
+  <label for="remark" class="q">備考・ご自由にお書きください</label>
+  <textarea id="remark" placeholder="例）よかった点／改善してほしい点など"></textarea>
+</div>
+
+<div class="row">
+  <button id="saveBtn" type="button" class="btn" title="PDFで保存">PDFで保存</button>
+</div>
+
+  </form>  <div class="thanks">ご協力ありがとうございました。</div>
+  <p class="note">※ PDF保存がうまくいかない場合は、テスト欄の「フォールバック強制」をお試しください。</p>  <section id="summary" aria-hidden="true"></section>  <details class="test">
+    <summary>開発者向けテスト</summary>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:8px 0;">
+      <button type="button" id="runTests" class="btn" style="padding:8px 12px; font-weight:600;">テストを実行</button>
+      <button type="button" id="dryRun" class="btn" style="padding:8px 12px; font-weight:600; background:#6366f1;">ダミーデータでPDF生成テスト</button>
+      <label style="display:inline-flex; align-items:center; gap:6px;">
+        <input type="checkbox" id="forceFallback"> html2pdf を使わずフォールバック強制
+      </label>
+    </div>
+    <div id="testLog" style="font-family:ui-monospace, Menlo, Consolas; font-size:12px; white-space:pre-wrap; background:#fafafa; border:1px solid #eee; border-radius:8px; padding:8px;"></div>
+  </details>  <script>
+    const sleep = (ms)=> new Promise(r=>setTimeout(r, ms));
+    async function waitForPaint(extraMs=120){
+      await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+      if(document.fonts && document.fonts.ready){ try{ await document.fonts.ready; }catch(_){} }
+      if(extraMs>0) await sleep(extraMs);
+    }
+
+    // ★ ラジオ版スターの選択状態を見た目に反映
+    function refreshStarsVisual(container){
+      const inputs = Array.from(container.querySelectorAll('.star-input'));
+      const labels = Array.from(container.querySelectorAll('.star-label'));
+      const checked = inputs.find(i=>i.checked);
+      const score = checked ? Number(checked.value) : 0;
+      labels.forEach((lab, idx)=>{
+        lab.classList.toggle('selected', idx < score);
+      });
+    }
+
+    function initStarRadios(){
+      document.querySelectorAll('.stars').forEach(container=>{
+        refreshStarsVisual(container);
+        container.addEventListener('change', ()=>refreshStarsVisual(container));
+        // キーボードでの操作補助（左右キー）
+        container.addEventListener('keydown', e=>{
+          if(e.target.classList.contains('star-input')){
+            const inputs = Array.from(container.querySelectorAll('.star-input'));
+            const idx = inputs.indexOf(e.target);
+            if(e.key==='ArrowRight' && idx < inputs.length-1){ inputs[idx+1].checked = true; inputs[idx+1].dispatchEvent(new Event('change', {bubbles:true})); }
+            if(e.key==='ArrowLeft' && idx > 0){ inputs[idx-1].checked = true; inputs[idx-1].dispatchEvent(new Event('change', {bubbles:true})); }
+          }
+        });
+      });
+    }
+
+    function buildSummary(){
+      let html = '<h2 style="margin:0 0 8px">アンケート結果（要約）</h2>';
+      html += '<table>';
+      document.querySelectorAll('.stars').forEach(box=>{
+        const label = box.previousElementSibling?.innerText || '';
+        const checked = box.querySelector('.star-input:checked');
+        const score = checked ? checked.value : '—';
+        html += `<tr><th>${label}</th><td>${score}</td></tr>`;
+      });
+      const remark=document.getElementById('remark').value;
+      html += `<tr><th>備考</th><td>${remark ? remark.replace(/\n/g,'<br>') : '—'}</td></tr>`;
+      html += '</table>';
+      const s = document.getElementById('summary');
+      s.innerHTML = html;
+      return s;
+    }
+
+    function loadScript(src){
+      return new Promise((resolve,reject)=>{
+        const el = document.createElement('script');
+        el.src = src; el.async = true; el.onload = ()=>resolve(true); el.onerror = ()=>reject(new Error('load fail'));
+        document.head.appendChild(el);
+      });
+    }
+    async function ensureHtml2Pdf(){
+      if(window.html2pdf) return true;
+      try{ await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'); }catch(e){}
+      if(window.html2pdf) return true;
+      try{ await loadScript('https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js'); }catch(e){}
+      return !!window.html2pdf;
+    }
+
+    function printSummary(){
+      const s = buildSummary();
+      const prevDisp = s.style.display; s.style.display = 'block';
+      document.body.classList.add('print-summary');
+      window.print();
+      document.body.classList.remove('print-summary');
+      s.style.display = prevDisp || '';
+    }
+
+    function downloadBlob(blob, filename){
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename; a.style.display='none';
+      document.body.appendChild(a); a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1000);
+    }
+
+    async function saveAsPDF(){
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = true; const prevLabel = btn.textContent; btn.textContent = '生成中…'; btn.setAttribute('aria-busy','true');
+
+      const summaryEl = buildSummary();
+      const prevDisp = summaryEl.style.display; summaryEl.style.display = 'block';
+
+      await waitForPaint(160);
+      if(summaryEl.offsetHeight === 0){ await waitForPaint(240); }
+
+      const forceFallback = document.getElementById('forceFallback')?.checked;
+      let canUseLib = !forceFallback && await ensureHtml2Pdf();
+
+      const opt={
+        margin:10,
+        filename: `講習アンケート_${new Date().toISOString().slice(0,10)}.pdf`,
+        image:{type:'jpeg',quality:0.98},
+        html2canvas:{scale:2,useCORS:true, scrollY: 0},
+        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+      };
+
+      if(canUseLib){
+        try{ await html2pdf().from(summaryEl).set(opt).save(); }
+        catch(e1){
+          try{ const blob = await html2pdf().from(summaryEl).set(opt).outputPdf('blob'); downloadBlob(blob, opt.filename); }
+          catch(e2){ console.warn('html2pdf 失敗。印刷へフォールバックします。', e1, e2); printSummary(); }
+        }
+      }else{ printSummary(); }
+
+      summaryEl.style.display = prevDisp || '';
+      btn.disabled = false; btn.textContent = prevLabel; btn.removeAttribute('aria-busy');
+    }
+
+    function log(msg){ const el=document.getElementById('testLog'); el.textContent += (msg+"\n"); }
+    function clearLog(){ const el=document.getElementById('testLog'); el.textContent=''; }
+    function runTests(){
+      clearLog();
+      try{
+        const boxes = document.querySelectorAll('.stars');
+        log(`質問数: ${boxes.length}（期待: 8） -> ${boxes.length===8?'OK':'NG'}`);
+
+        // すべて★3チェック
+        document.querySelectorAll('.star-input[value="3"]').forEach(i=>{ i.checked=true; i.dispatchEvent(new Event('change', {bubbles:true})); });
+        const s = buildSummary();
+        const has3 = (s.innerHTML.match(/>3<\/td>/g)||[]).length;
+        log(`★3の反映数: ${has3}（期待: 8） -> ${has3===8?'OK':'NG'}`);
+        const remark = document.getElementById('remark');
+        remark.value = '改行A\n改行B';
+        const s2 = buildSummary();
+        log(`備考の改行→<br> への変換: ${/改行A<br>改行B/.test(s2.innerHTML)?'OK':'NG'}`);
+
+        log(`html2pdf 存在: ${!!window.html2pdf}`);
+        log('テスト完了');
+      }catch(e){ log('テスト中エラー: '+e.message); }
+    }
+
+    async function dryRun(){
+      clearLog();
+      document.querySelectorAll('.star-input[value="4"]').forEach(i=>{ i.checked=true; i.dispatchEvent(new Event('change', {bubbles:true})); });
+      document.getElementById('remark').value = 'ダミー出力テスト';
+      const s = buildSummary();
+      const prev = s.style.display; s.style.display='block';
+      const ok = await ensureHtml2Pdf();
+      if(!ok){ log('ライブラリ未ロード → フォールバックへ'); printSummary(); s.style.display=prev||''; return; }
+      const opt={ margin:10, filename:'_dryrun.pdf', image:{type:'jpeg',quality:0.5}, html2canvas:{scale:1.5}, jsPDF:{unit:'mm',format:'a4'} };
+      try{ const blob = await html2pdf().from(s).set(opt).outputPdf('blob'); log(`Blob生成OK: ${blob.size} bytes`); }
+      catch(e){ log('Blob生成失敗: '+e.message); }
+      s.style.display=prev||'';
+      log('ドライラン終了');
+    }
+
+    function init(){
+      initStarRadios();
+      document.getElementById('saveBtn').addEventListener('click', saveAsPDF);
+      document.getElementById('runTests').addEventListener('click', runTests);
+      document.getElementById('dryRun').addEventListener('click', dryRun);
+    }
+    if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+  </script></body>
+</html>
