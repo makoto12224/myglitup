@@ -1,0 +1,286 @@
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<meta name="description" content="超初心者向けの丁寧な手順書。Google TakeoutでGoogleフォトをダウンロードし、digiKamで安全に“人・モノ・イベント”ごとに整理してフォルダ出力するまでを、迷わない順番でやさしく解説。PC教室の連絡ボタン付き。" />
+<style type="text/css">:root{
+      --bg:#0b1224; --panel:#0f172a; --card:#111827; --muted:#b8c0cc; --text:#eef2f7;
+      --green:#22c55e; --blue:#0ea5e9; --amber:#f59e0b; --rose:#f43f5e; --violet:#8b5cf6;
+      --shadow:0 10px 30px rgba(0,0,0,.35); --radius:18px;
+    }
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),#0f172a 60%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI","Noto Sans CJK JP",sans-serif;line-height:1.75}
+    a{color:#93c5fd;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1100px;margin:0 auto;padding:28px 18px 110px}
+    .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:26px;align-items:center}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+    .title{margin:0 0 10px;font-size:clamp(28px,3.6vw,46px);line-height:1.2}
+    .subtitle{color:var(--muted);font-size:clamp(16px,2vw,20px);margin:6px 0 0}
+    .badge{display:inline-block;background:rgba(34,197,94,.2);border:1px solid rgba(34,197,94,.6);color:#d1fae5;padding:8px 12px;border-radius:999px;font-size:13px}
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border-radius:12px;font-weight:800;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.12)}
+    .btn.primary{background:linear-gradient(180deg,var(--green),#16a34a);color:#fff}
+    .btn.secondary{background:linear-gradient(180deg,var(--blue),#0369a1);color:#fff}
+    .btn.neutral{background:linear-gradient(180deg,#64748b,#475569);color:#fff}
+    .emoji{filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+    .steps{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .step{position:relative;padding:18px;border-radius:16px;background:linear-gradient(180deg,rgba(56,189,248,.08),rgba(2,132,199,.06));border:1px solid rgba(148,163,184,.25)}
+    .num{position:absolute;top:-14px;left:-14px;background:#38bdf8;color:#07101a;border-radius:50%;width:44px;height:44px;display:grid;place-items:center;font-weight:900;box-shadow:var(--shadow)}
+    .step h3{margin:0 0 8px;font-size:20px}
+    .list{margin:0 0 0 0;padding:0 0 0 22px}
+    .callout{background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.5);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .tip{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.4);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .faq details{background:rgba(148,163,184,.1);border:1px solid rgba(148,163,184,.25);border-radius:12px;padding:12px 14px;margin:10px 0}
+    .faq summary{cursor:pointer;font-weight:800}
+    .footer{margin-top:40px;color:var(--muted);font-size:14px}
+    @media (max-width: 980px){ .hero{grid-template-columns:1fr} .steps{grid-template-columns:1fr} }
+    @media print {.btn,.ctaRow{display:none} .container{padding:0} a{color:inherit;text-decoration:underline}}
+
+    /* === 補足セクション（AIタグ運用の現実） === */
+    .ai-tag-notes{--ink:var(--text);--muted:var(--muted);--line:rgba(255,255,255,.12);--soft:rgba(255,255,255,.04);--brand:var(--blue);}
+    .ai-tag-notes{font-family:inherit;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:20px;margin:24px 0}
+    .ai-tag-notes h2{margin:0 0 10px;font-size:1.15rem}
+    .ai-tag-notes .lead{color:var(--muted);font-size:.95rem;margin-bottom:14px}
+    .ai-tag-notes .card-mini{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}
+    .ai-tag-notes .badge{display:inline-block;background:rgba(14,165,233,.25);border:1px solid rgba(14,165,233,.6);color:#e0f2fe;border-radius:999px;padding:4px 10px;font-size:.75rem;margin-right:8px}
+    .ai-tag-notes ol{margin:8px 0 0 1.25rem}
+    .ai-tag-notes li{margin:.35rem 0}
+    .ai-tag-notes details{border:1px dashed var(--line);border-radius:10px;background:rgba(255,255,255,.02);margin-top:10px}
+    .ai-tag-notes summary{cursor:pointer;padding:10px 12px;font-weight:600}
+    .ai-tag-notes .box{padding:0 12px 12px}
+    .ai-tag-notes .tips{display:grid;gap:10px}
+    .ai-tag-notes .tips .tip{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.45);border-radius:10px;padding:10px;color:#d1fae5}
+    .ai-tag-notes .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .ai-tag-notes .btn{appearance:none;border:1px solid var(--brand);color:#e0f2fe;background:rgba(14,165,233,.08);border-radius:10px;padding:8px 12px;font-size:.9rem;text-decoration:none}
+    .ai-tag-notes .btn.primary{background:linear-gradient(180deg,var(--blue),#0369a1);color:#fff}
+</style>
+<div class="container">
+<section class="hero">
+<div class="card"><span class="badge">超初心者向け・クラウド不要・配布OK</span>
+<h1 class="title">はじめてでもできる！<br />
+Googleテイクアウト &rarr; 写真整理 完全ガイド</h1>
+
+<p class="subtitle">この順番どおりに進めるだけでOK。ダウンロード（Takeout）&rarr; digiKamのAIで人・モノを自動タグ &rarr; ワンクリックでフォルダ出力。プライバシー最優先のローカル運用です。</p>
+
+<div class="ctaRow"><a class="btn secondary" href="https://takeout.google.com/" rel="noopener" target="_blank"><span class="emoji">📦</span>Google Takeoutへ（公式）</a> <a class="btn primary" href="https://www.digikam.org/download/" rel="noopener" target="_blank"><span class="emoji">⬇️</span>digiKamをダウンロード（公式）</a> <a class="btn neutral" href="#lesson"><span class="emoji">🎓</span>困ったらPC教室で一緒に</a></div>
+</div>
+
+<div class="card">
+<div class="tip"><b>準備物：</b>Googleアカウント、空き容量のあるPC、外付けHDD（推奨 2TB〜）。</div>
+
+<div class="callout"><b>ぜったいにやる：</b>原本フォルダを<b>外付けHDDに丸ごとコピー</b>してから作業（失敗しても元に戻せます）。</div>
+</div>
+</section>
+
+<section class="card">
+<h2>手順（ゆっくり丁寧に：ココから順番に）</h2>
+
+<div class="steps">
+<div class="step">
+<div class="num">0</div>
+
+<h3>Googleテイクアウト（ダウンロード）</h3>
+
+<ol class="list">
+	<li><a href="https://takeout.google.com/" rel="noopener" target="_blank">Google Takeout</a> を開く</li>
+	<li>「<b>すべて選択を解除</b>」をクリック</li>
+	<li>下にスクロールして「<b>Google フォト</b>」だけにチェック</li>
+	<li>一番下へ &rarr; 「<b>次のステップへ</b>」</li>
+	<li>配信方法＝「<b>ダウンロードリンクをメールで送信</b>」、ファイル形式＝<b>ZIP</b>、サイズ＝<b>2GBまたは10GB</b></li>
+	<li>「<b>エクスポートを作成</b>」&rarr; メールが来たらリンクからダウンロード</li>
+	<li>ZIPファイルを右クリック &rarr; <b>すべて展開（解凍）</b></li>
+</ol>
+
+<div class="callout">よくあるミス：<br />
+・Googleフォト以外も選んでしまう &rarr; 容量が巨大に。必ず「すべて解除」&rarr;「Googleフォトだけ」に！</div>
+</div>
+
+<div class="step">
+<div class="num">1</div>
+
+<h3>原本の保護（安全第一）</h3>
+
+<ol class="list">
+	<li>解凍したフォルダ（Takeout/Google フォト/&hellip;）を<b>外付けHDDへ丸ごとコピー</b></li>
+	<li>PC内に<b>作業用フォルダ</b>を作る（例：写真_整理用）</li>
+	<li>以後はこの「作業用フォルダ」で作業（原本は触らない）</li>
+</ol>
+
+<div class="tip">バックアップがあると安心。復元もすぐできます。</div>
+</div>
+
+<div class="step">
+<div class="num">2</div>
+
+<h3>digiKamのインストール</h3>
+
+<ol class="list">
+	<li><a href="https://www.digikam.org/download/" rel="noopener" target="_blank">公式ダウンロード</a> を開く</li>
+	<li><b>Windows：</b>Windows(.exe) &rarr; ダブルクリック &rarr; 「次へ」連打で完了</li>
+	<li><b>Mac：</b>.dmg を開いて、digiKam を<b>Applicationsにドラッグ</b></li>
+	<li><b>Linux：</b><code>sudo apt install digikam</code> または AppImage を実行</li>
+</ol>
+</div>
+
+<div class="step">
+<div class="num">3</div>
+
+<h3>初期設定（コレクション追加）</h3>
+
+<ol class="list">
+	<li>digiKam を起動</li>
+	<li>「コレクションを追加」を選び、<b>作業用フォルダ</b>を指定</li>
+	<li>サムネイル作成が終わるまで待つ</li>
+</ol>
+
+<div class="tip">見え方：左に「アルバム（フォルダ）」、右にサムネイル一覧が出ます。</div>
+</div>
+
+<div class="step">
+<div class="num">4</div>
+
+<h3>AIで人物タグ（顔認識）</h3>
+
+<ol class="list">
+	<li>上メニュー <b>ツール &rarr; メンテナンス</b> を開く</li>
+	<li>「<b>顔検出・認識</b>」にチェック &rarr; 実行</li>
+	<li>終わったら左の <b>[人々]</b> を開き、「未確認」を数十枚だけ名前付け（例：山田太郎）</li>
+	<li>次回から同じ人物は<b>自動でまとまる</b></li>
+</ol>
+
+<div class="callout">時間がかかるのは正常。<b>寝る前に実行</b>しておくとラクです。</div>
+</div>
+
+<div class="step">
+<div class="num">5</div>
+
+<h3>AIでモノ・シーンのタグ</h3>
+
+<ol class="list">
+	<li>再び <b>ツール &rarr; メンテナンス</b></li>
+	<li>「<b>自動タグ付け（ディープラーニング）</b>」にチェック &rarr; 実行</li>
+	<li>左の <b>[タグ]</b> に <code>Object/犬</code> 等が並ぶようになる</li>
+</ol>
+
+<div class="tip">タグは何個でも付いてOK。「犬 かつ 山田太郎」のような複合検索もできます。</div>
+</div>
+
+<div class="step">
+<div class="num">6</div>
+
+<h3>フォルダへ自動出力（ほぼワンクリック）</h3>
+
+<ol class="list">
+	<li>左の <b>[タグ]</b> または <b>[人々]</b> から目的のタグを選ぶ</li>
+	<li>サムネイル一覧で <kbd>Ctrl + A</kbd>（全部選択）</li>
+	<li>右クリック &rarr; <b>エクスポート</b>（または「コピー/移動」）</li>
+	<li>親フォルダ（例：<code>整理済み/人物/</code>）を指定</li>
+	<li>オプションで <b>「サブフォルダ名にタグ名を使う」</b> にチェック</li>
+	<li>（任意）<b>サブフォルダ名ルール</b> に <code>{year}/{month}-{tag}</code> と入れると、年/月/タグで自動整列</li>
+</ol>
+
+<div class="tip">最初は<b>コピー</b>で出力 &rarr; 問題なければ<b>移動</b>に切り替え。</div>
+</div>
+
+<div class="step">
+<div class="num">7</div>
+
+<h3>仕上げ（配布・バックアップ）</h3>
+
+<ol class="list">
+	<li>できあがったフォルダをUSBにコピー（家族に配布）</li>
+	<li>外付けHDD/NAS に二重保存で安心</li>
+	<li>JSONが不要なら <code>.json</code> を削除 or 別フォルダへ移動</li>
+</ol>
+</div>
+</div>
+</section>
+
+<section class="card">
+<h2>よくある質問（困ったらここ）</h2>
+
+<div class="faq">
+<details><summary>処理が遅い／止まった気がする</summary>
+
+<div>初回は全写真を解析するため時間がかかります。夜に放置でOK。年ごとに分けて実行すると速く感じます。</div>
+</details>
+
+<details><summary>人物の名前がバラバラに&hellip;</summary>
+
+<div>[人々]で同一人物をまとめ直し。修正するほど次回以降の精度が上がります。</div>
+</details>
+
+<details><summary>重複ファイルができる</summary>
+
+<div>エクスポート時の「既存ファイルの処理」を<b>スキップ</b> or <b>自動リネーム</b>に。まずは「コピー」で検証しましょう。</div>
+</details>
+
+<details><summary>容量が足りない</summary>
+
+<div>原本は外付けHDD（2TB〜）。作業はPCのSSD。<code>.json</code>は不要なら削除OK。</div>
+</details>
+</div>
+</section>
+<!-- ▼ ここから補足セクションを追加 ▼ -->
+
+<section class="ai-tag-notes card" id="ai-notes">
+<h2>補足：AIタグ運用の現実的なワークフロー</h2>
+
+<p class="lead">AIの自動タグは「仮ラベル」。<span class="badge">まずAIで一括</span><span class="badge">あとで人が微修正</span>の二段構えが最短ルートです。</p>
+
+<div class="card-mini"><strong>結論（要点）</strong>
+
+<ul>
+	<li>AIは <em>だいたい合ってるが完璧ではない</em>（猫⇄犬、夕焼け⇄夜景などの取り違えは起こる）。</li>
+	<li>まずAIで「ざっくり仕分け」&rarr; まとまりごとに人がタグ名を修正・統合するのが効率的。</li>
+	<li>最終的にタグ検索で運用するか／物理フォルダに移すかは後段で決めればOK。</li>
+</ul>
+</div>
+
+<div class="card-mini"><strong>おすすめ手順（digiKam想定）</strong>
+
+<ol>
+	<li><b>AIで初期タグ付け</b>：ツール &rarr; メンテナンス &rarr; 自動タグ付け／顔認識／重複検出。</li>
+	<li><b>候補をまとめて確認</b>：タグビューで「犬？」「夕日？」などのグループを一括チェック。</li>
+	<li><b>タグを修正・統合</b>：誤判定は複数選択&rarr;タグ削除／置換。タグ名のリネームで階層統一。</li>
+	<li><b>必要ならフォルダ出力</b>：完成タグごとに一括移動（例：<code>People/家族/母</code>、<code>Scene/海</code>）。</li>
+</ol>
+</div>
+
+<details><summary>よくある質問（FAQ）</summary>
+
+<div class="box">
+<p><b>Q. AIタグは無視して、後で自分で直す前提でいい？</b><br />
+A. はい。まずAIで&ldquo;仮タグ&rdquo;を広く付け、あとから人がまとめて整えるのが現実的です。</p>
+
+<p><b>Q. 物理フォルダ自動振り分けは？</b><br />
+A. 最終タグが整った段階で一括移動が安全。途中で物理移動すると学習結果の整合が崩れがち。</p>
+
+<p><b>Q. 時短のコツは？</b><br />
+A. 重複検出&rarr;削除、連射写真はレーティング&rarr;低評価を隠す、で後の確認枚数を減らすと速いです。</p>
+</div>
+</details>
+
+<div class="tips">
+<div class="tip"><b>TIP</b>：初回のAI処理は時間がかかるので夜間バッチ推奨。</div>
+
+<div class="tip"><b>TIP</b>：「タグ名の標準」を最初に決める（例：<code>People/家族/母</code>、<code>Scene/海</code>）。後でリネームする手間が激減。</div>
+
+<div class="tip"><b>TIP</b>：タグ運用が整ったら「物理フォルダ化」は最後に一度だけまとめて。</div>
+</div>
+
+<div class="cta"><a class="btn primary" href="#ai-notes" id="ai-tag-notes-apply">この手順で整理を始める</a> <a class="btn" href="#ai-notes" id="ai-tag-notes-export">完成タグでフォルダ出力する</a></div>
+</section>
+<!-- ▲ 補足セクション ここまで ▲ -->
+
+<section class="card" id="lesson">
+<h2>PC教室で&ldquo;一緒に&rdquo;やる（有料サポート）1時間&nbsp;1000円〜</h2>
+
+<p>不安なところだけ手伝います。外付けHDDだけ持参でOK。オンライン遠隔も可。</p>
+
+<div class="ctaRow"><a class="btn primary" href="https://lin.ee/KjyAirf" rel="noopener" target="_blank">LINEで予約</a> <a class="btn secondary" href="mailto:myg20201101@gmail.com?subject=%E3%80%90PC%E6%95%99%E5%AE%A4%E3%80%91%E5%86%99%E7%9C%9F%E6%95%B4%E7%90%86%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88" rel="noopener" target="_blank">メールで問い合わせ</a></div>
+
+<p style="color:#b8c0cc;margin-top:8px">※ サロサポ・ジギョサポデジタル教室／夜・休日対応OK。</p>
+</section>
+
+<footer class="footer">&copy; サロサポ・ジギョサポデジタル教室. All rights reserved.｜配布歓迎（改変OK・商用利用不可）。</footer>
+</div>
+<script>document.getElementById('y').textContent=new Date().getFullYear();</script>
