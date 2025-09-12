@@ -1,0 +1,756 @@
+<br />
+<style type="text/css">:root{
+      --bg:#0b0c0f;
+      --card:#13151a;
+      --ink:#e9edf1;
+      --muted:#a8b0bb;
+      --line:#22262e;
+      --brand:#63b3ff;
+      --accent:#8de3b2;
+      --warn:#ffd166;
+      --ok:#78e08f;
+      --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25);
+      --radius:18px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --ink:#111319;
+        --muted:#5b6671;
+        --line:#e8ecf2;
+        --brand:#2563eb;
+        --accent:#0ea5e9;
+        --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+</style>
+<header>
+<div class="container nav">
+<div class="brand"><span class="brand-badge">IG</span> <span><span style="font-size:20px;">2025年9月版・インスタ運用ガイド</span></span></div>
+<br />
+<button aria-expanded="false" aria-label="メニューを開く" class="hamburger" id="hamburger">☰</button></div>
+
+<div aria-hidden="true" class="drawer" id="drawer"><a href="#toc">目次</a>&nbsp;　<a href="#sec0">いまの変化</a>　 <a href="#sec1">設計思想</a>&nbsp;　<a href="#sec2">勝ちフォーマット</a>&nbsp;　<a href="#sec3">ハッシュタグ</a>&nbsp;　<a href="#sec4">投稿時間</a>&nbsp;　<a href="#sec5">生成AI</a>　 <a href="#sec6">業種別</a>&nbsp;　<a href="#sec7">テンプレ集</a>&nbsp;　<a href="#sec8">KPI/改善</a>&nbsp;　<a href="#sec9">30日計画</a>&nbsp;　<a href="#sec10">落とし穴</a>&nbsp;　<a href="#contact">無料相談</a></div>
+</header>
+
+<main>
+<section class="hero">
+<div class="container">
+<h1>インスタ投稿をバズらせるスキーム徹底解説<br />
+<small style="font-weight:500;color:var(--muted)">事業主向け｜2025年9月トレンド完全対応</small></h1>
+
+<p>短尺動画・カルーセル・ストーリーズ・生成AI・ハッシュタグ・投稿時間・業種別レシピ・テンプレ・KPI・30日実装プランまで。</p>
+
+<div class="cta"><a class="btn primary" href="#sec9">まずは30日プランから始める</a> <a class="btn" href="#sec7">テンプレだけ欲しい</a> <a class="btn" href="#contact">無料相談を予約</a></div>
+
+<div class="kpis">
+<div class="card">
+<div class="num">15&ndash;30秒</div>
+
+<div class="small">推奨リール尺（冒頭2秒が命）</div>
+</div>
+
+<div class="card">
+<div class="num">保存率&uarr;</div>
+
+<div class="small">カルーセルの主要KPIに設定</div>
+</div>
+
+<div class="card">
+<div class="num">DM導線</div>
+
+<div class="small">拡散＝公開＋私的シェアの両輪</div>
+</div>
+
+<div class="card">
+<div class="num">週3本</div>
+
+<div class="small">ABテスト用の基本投稿頻度</div>
+</div>
+</div>
+
+<div class="toc" id="toc" style="margin-top:20px"><a href="#sec0">0) いま起きている変化（例つき）</a> <a href="#sec1">1) アルゴに刺さる設計思想（例つき）</a> <a href="#sec2">2) 勝ちフォーマット：リール / カルーセル / ストーリーズ</a> <a href="#sec3">3) ハッシュタグの実務ルール</a> <a href="#sec4">4) 投稿タイミング（JST）</a> <a href="#sec5">5) 生成AIの実用活用</a> <a href="#sec6">6) 業種別プレイブック</a> <a href="#sec7">7) そのまま使えるテンプレ集</a> <a href="#sec8">8) KPIと改善サイクル</a> <a href="#sec9">9) 30日実行プラン</a> <a href="#sec10">10) よくある落とし穴</a></div>
+</div>
+</section>
+<!-- 0) 変化 -->
+
+<section id="sec0">
+<div class="container">
+<h2>0) いま起きている&ldquo;本質的な変化&rdquo;5つ</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>1. 動画の主役は依然リール</h3>
+
+<p class="lead">短尺&times;テンポ&times;字幕。企画勝負で伸びる。</p>
+
+<div class="tips"><strong>例：</strong>美容室が「カット&rarr;仕上がり」を30秒で凝縮。地域名ハッシュタグを添えて予約DMが増加。</div>
+</div>
+
+<div class="card">
+<h3>2. 創造性と関係性が評価軸</h3>
+
+<p class="lead">オリジナル文脈＋会話が生まれる設計が優位。</p>
+
+<div class="tips"><strong>例：</strong>カフェが「常連さんの一言」を掲載&rarr;コメント欄で&ldquo;推しメニュー談義&rdquo;が加速し保存率&uarr;。</div>
+</div>
+
+<div class="card">
+<h3>3. &ldquo;シェア＝勝ち&rdquo;の時代</h3>
+
+<p class="lead">公開投稿だけでなくDMでの私的共有まで設計。</p>
+
+<div class="tips"><strong>例：</strong>士業が「契約トラブル回避3選」を図解&rarr;「家族に送った」DMシェアから相談リード化。</div>
+</div>
+
+<div class="card">
+<h3>4. タグは関連性が命</h3>
+
+<p class="lead">数より&ldquo;内容に一致&rdquo;。中規模タグを混ぜる。</p>
+
+<div class="tips"><strong>例：</strong>旅行会社が「#秋旅 #紅葉スポット #京都旅行」で検索流入増。ビッグ＋ミドル＋ローカルをブレンド。</div>
+</div>
+
+<div class="card">
+<h3>5. 生成AIが現場装備に</h3>
+
+<p class="lead">AIスタンプ/背景差し替えで撮れ高不足を解消。</p>
+
+<div class="tips"><strong>例：</strong>アパレルがAI背景で「路面スナップ風」に。世界観を統一し撮影コストも圧縮。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 1) 設計思想 -->
+
+<section id="sec1">
+<div class="container">
+<h2>1) アルゴリズムに刺さる&ldquo;設計思想&rdquo;</h2>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>オリジナル性 &times; 体験価値</h3>
+
+<p>「誰の・どの局面で・何が変わるか」を明文化。</p>
+
+<div class="tips"><strong>例：</strong>農家が「糖度計で計測&rarr;味見&rarr;出荷判定」を公開。リアルさが信頼と保存を生む。</div>
+</div>
+
+<div class="card">
+<h3>会話が起きる導線</h3>
+
+<p>二択・投票・質問でコメント/保存/DMを誘導。</p>
+
+<div class="tips"><strong>例：</strong>化粧品「ツヤ肌？マット肌？」アンケ&rarr;結果発表と併せて商品提案。</div>
+</div>
+
+<div class="card">
+<h3>動画優先の配信設計</h3>
+
+<p>冒頭2秒で&ldquo;続きを見る理由&rdquo;。字幕は必須。</p>
+
+<div class="tips"><strong>例：</strong>飲食店は&ldquo;湯気の立つアップ&rdquo;&rarr;「レシピは3工程」と先出し&rarr;最後にCTA。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2) 勝ちフォーマット -->
+
+<section id="sec2">
+<div class="container">
+<h2>2) 2025年9月の&ldquo;勝ちフォーマット&rdquo;</h2>
+
+<h3>リール（15&ndash;30秒）</h3>
+
+<div class="grid cols-2">
+<div class="card"><span class="tag">構成テンプレ</span>
+
+<div class="code">1) フック2秒：結論 or 対比 2) 本編10&ndash;20秒：手順/変化/実演 3) 〆3秒：保存喚起＋CTA（在庫/予約リンク）</div>
+
+<div class="tips"><strong>例：</strong>建設業「基礎&rarr;鉄筋&rarr;打設」を早送りで30秒。最後に&ldquo;見積もりDMで5%OFF&rdquo;。</div>
+</div>
+
+<div class="card"><span class="tag">制作のコツ</span>
+
+<ul>
+	<li>「Use template」で流行尺に合わせて差し替え</li>
+	<li>ナレーション or 字幕で無音対策</li>
+	<li>BGMはブランドに合う流行曲を厳選</li>
+</ul>
+
+<div class="tips"><strong>例：</strong>美容サロンが人気テンプレに&ldquo;仕上がり&rarr;工程&rarr;笑顔&rdquo;を当て込み、予約率UP。</div>
+</div>
+</div>
+
+<h3>カルーセル（多枚深掘り）</h3>
+
+<div class="grid cols-2">
+<div class="card"><span class="tag">台本テンプレ（8枚）</span>
+
+<div class="code">① ベネフィット断言 ②&ndash;⑥ 図解/手順/比較/注意 ⑦ ケース・実例 ⑧ 保存喚起＋CTA（予約/EC/DM）</div>
+
+<div class="tips"><strong>例：</strong>士業「会社設立で損しない3選」&rarr;条文例&rarr;チェックリスト&rarr;無料相談CTA。</div>
+</div>
+
+<div class="card"><span class="tag">設計ポイント</span>
+
+<ul>
+	<li>1枚目は&ldquo;結果&rdquo;を見せる（結論先出し）</li>
+	<li>図解で「保存したい」を狙う</li>
+	<li>最後はDMや予約へ動線</li>
+</ul>
+
+<div class="tips"><strong>例：</strong>飲食「秋限定解禁！」&rarr;素材・産地・仕込み&rarr;来店動機&rarr;席予約リンク。</div>
+</div>
+</div>
+
+<h3>ストーリーズ（拡散＆親密化）</h3>
+
+<div class="grid cols-3">
+<div class="card"><b>即時シェア</b>
+
+<p>新規投稿を必ずストーリーズで案内。</p>
+
+<div class="tips"><strong>例：</strong>「NEW POST」スタンプ＋プレビュー&rarr;タップ率&uarr;。</div>
+</div>
+
+<div class="card"><b>インタラクティブ</b>
+
+<p>投票/質問/クイズ/<em>Add yours</em>で会話化。</p>
+
+<div class="tips"><strong>例：</strong>アパレル「どの色が推し？」&rarr;票データを翌日投稿に活用。</div>
+</div>
+
+<div class="card"><b>リンク導線</b>
+
+<p>EC・予約・YouTubeへ送客。</p>
+
+<div class="tips"><strong>例：</strong>美容サロン「空き枠あり&rarr;予約リンク」から直予約が増加。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3) タグ -->
+
+<section id="sec3">
+<div class="container">
+<h2>3) ハッシュタグの&ldquo;いま&rdquo;と実務ルール</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>原則</h3>
+
+<ul>
+	<li>数より「内容一致」。乱射は逆効果</li>
+	<li>ビッグ＋ミドル＋ローカルをブレンド</li>
+	<li>投稿ごとに再選定：企画固有タグを追加</li>
+</ul>
+
+<div class="tips"><strong>例：</strong>美容院「#福岡美容室 #ショートカット #40代ヘアスタイル」。</div>
+</div>
+
+<div class="card">
+<h3>推奨セット例（業種別）</h3>
+
+<ul>
+	<li>飲食：#秋スイーツ #栗スイーツ #天神カフェ巡り</li>
+	<li>旅行：#秋旅 #紅葉スポット #京都旅行</li>
+	<li>士業：#相続相談 #遺言書作成 #福岡弁護士</li>
+</ul>
+
+<div class="warn"><strong>注意：</strong>関係ないビッグタグ（#love #insta など）は避ける。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4) 時間帯 -->
+
+<section id="sec4">
+<div class="container">
+<h2>4) 投稿タイミング（JST）</h2>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>早朝（5&ndash;7時）</h3>
+
+<p>主婦・社会人の朝時間。保存されやすい。</p>
+
+<div class="tips"><strong>例：</strong>弁当レシピのカルーセル&rarr;保存率&uarr;。</div>
+</div>
+
+<div class="card">
+<h3>昼（11&ndash;13時）</h3>
+
+<p>ランチ・学休憩でアクティブ。</p>
+
+<div class="tips"><strong>例：</strong>オフィス街カフェが日替わりを投稿&rarr;来店促進。</div>
+</div>
+
+<div class="card">
+<h3>夕（17&ndash;19時）</h3>
+
+<p>帰宅前後はエンタメ/ファッションが強い。</p>
+
+<div class="tips"><strong>例：</strong>「仕事帰りコーデ提案」&rarr;コメント活発。</div>
+</div>
+</div>
+
+<div class="tips" style="margin-top:10px"><strong>実務：</strong>週3本&times;3枠（早朝/昼/夕）でABテスト&rarr;インサイトの保存率/プロフ遷移/DM発生で最適化。</div>
+</div>
+</section>
+<!-- 5) 生成AI -->
+
+<section id="sec5">
+<div class="container">
+<h2>5) 生成AIの&ldquo;実用&rdquo;活用</h2>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>AI画像編集</h3>
+
+<p>背景差し替え・スタイル変換で世界観統一。</p>
+
+<div class="tips"><strong>例：</strong>農産物直売所が「収穫体験」の理想背景に差し替え&rarr;訴求力UP。</div>
+</div>
+
+<div class="card">
+<h3>キャプション草案</h3>
+
+<p>AIで10案&rarr;人間が磨く（用語/数字/トンマナ）。</p>
+
+<div class="tips"><strong>例：</strong>新作ブーツに合うコーデ提案のキャプションをAI案から編集。</div>
+</div>
+
+<div class="card">
+<h3>AIインフルエンサー</h3>
+
+<p>AIキャラで製品紹介。24h稼働＆炎上リスク低。</p>
+
+<div class="tips"><strong>例：</strong>雑貨ブランドがAIモデルのルーティン投稿&rarr;新規リーチ増。</div>
+</div>
+</div>
+
+<div class="warn" style="margin-top:10px"><strong>ポリシー：</strong>広告/センシティブはAI使用の開示を。最終品質チェックは人間で。</div>
+</div>
+</section>
+<!-- 6) 業種別 -->
+
+<section id="sec6">
+<div class="container">
+<h2>6) 業種別・即実装プレイブック</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>飲食</h3>
+
+<ul>
+	<li>リール：オーブンで膨らむケーキ10秒&rarr;盛り付け&rarr;一口</li>
+	<li>カルーセル：素材/産地/こだわり3点&rarr;来店動機の言語化</li>
+	<li>ストーリーズ：本日の空席と予約リンク</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>アパレル</h3>
+
+<ul>
+	<li>リール：1週間コーデ（7カット&times;2秒）</li>
+	<li>カルーセル：骨格別ジャケットの選び方</li>
+	<li>ストーリーズ：再入荷通知＋商品リンク</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>美容（コスメ/サロン）</h3>
+
+<ul>
+	<li>リール：眉アート Before&rarr;After</li>
+	<li>カルーセル：乾燥肌のNGケア3つ&rarr;改善策</li>
+	<li>ストーリーズ：当日枠・Q&amp;A・症例集ハイライト</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>サービス（教育/士業/BtoB）</h3>
+
+<ul>
+	<li>カルーセル：図解&times;チェックリストで&ldquo;保存資産&rdquo;化</li>
+	<li>リール：FAQを1問1答で連投</li>
+	<li>ストーリーズ：無料相談の空き枠カレンダー</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- 7) テンプレ -->
+
+<section id="sec7">
+<div class="container">
+<h2>7) &ldquo;そのまま使える&rdquo;テンプレ集</h2>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>フック文（1枚目/冒頭2秒）</h3>
+
+<ul>
+	<li>【保存版】◯◯で失敗しない3つの条件</li>
+	<li>30秒でわかる！◯◯の最短手順</li>
+	<li>9割がやりがちな&times;&times;、正解はこっち</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>キャプション雛形（3行）</h3>
+
+<div class="code">① 結論：読者の利益を即提示 ② 要点：数字/手順/選択肢 ③ 行動：リンク先・DM合言葉・期限</div>
+
+<div class="tips"><strong>例：</strong>「秋限定スイーツ登場🍰 保存して次のカフェ巡りに！👉 詳細はストーリーズ」</div>
+</div>
+
+<div class="card">
+<h3>ハッシュタグ設計</h3>
+
+<div class="code">コア3&ndash;5（業界&times;商品&times;用途） 準コア5&ndash;10（地域/季節/シーン） 変動5（企画固有/キャンペーン）</div>
+
+<div class="tips"><strong>例：</strong>#福岡美容室 #ショートカット #40代ヘアスタイル #秋ヘア #時短セット</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 8) KPI -->
+
+<section id="sec8">
+<div class="container">
+<h2>8) KPIと改善サイクル（週次15分）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>主要KPI</h3>
+
+<ul>
+	<li><b>保存率</b>（HowTo/カルーセルの生命線）</li>
+	<li><b>シェア率</b>（共感/比較/チェックリスト）</li>
+	<li><b>プロフ遷移 &rarr; 外部クリック率</b>（予約/EC）</li>
+	<li><b>DM件数</b>（見込み顧客の温度）</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>改善サイクル</h3>
+
+<div class="code">1) 週次で上位投稿を確認 2) &ldquo;勝ち要素&rdquo;を1つ固定（例：フック） 3) 他要素を実験（尺/時間/構成/タグ） 4) 2週間単位で仮説更新</div>
+
+<div class="tips"><strong>例：</strong>保存率TOPが「図解レシピ」&rarr;来週は同書式で別メニューを投入。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 9) 30日プラン  ←★差し替え済み★ -->
+
+<section id="sec9">
+<div class="container">
+<h2>9) 30日実行プラン（JST・やさしい版）</h2>
+
+<p class="lead">むずかしい言葉は使いません。<b>「何を・いつ・どうするか」</b>だけに絞りました。週3回の投稿＋毎日のストーリーズで進めます。</p>
+
+<div class="card">
+<h3>まず決めること（最初の30分）</h3>
+
+<ul>
+	<li><b>目標：</b>例）予約20件／月、EC売上50万円／月 など</li>
+	<li><b>見る数字：</b>保存、シェア、プロフィールアクセス、DM件数</li>
+	<li><b>ネタの柱3つ：</b>例）やり方紹介（ハウツー）／比較・ビフォーアフター／お客様の声</li>
+	<li><b>呼びかけ（CTA）：</b>保存 &rarr; DM &rarr; 予約・購入（どれを一番にするか決める）</li>
+</ul>
+</div>
+
+<h3>4週間の流れ</h3>
+
+<div class="grid cols-2">
+<div class="card">
+<h4>1週目：準備の週</h4>
+
+<ul>
+	<li>ネタ3種類を決める（柱）</li>
+	<li>写真・動画をまとめて撮る、簡単なテンプレを作る</li>
+	<li>プロフィールをわかりやすく（誰に何を提供？ どう連絡？）</li>
+	<li>ストーリーズで使うスタンプを決める（投票・質問・リンク）</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>2週目：まず出してみる週</h4>
+
+<ul>
+	<li>火：朝6:30 リール（短い動画）</li>
+	<li>木：昼12:15 カルーセル（スライド）</li>
+	<li>土：夕18:30 リール（ビフォー&rarr;アフター）</li>
+	<li>毎日ストーリーズ：<b>「投稿しました」案内＋投票/質問</b></li>
+</ul>
+</div>
+
+<div class="card">
+<h4>3週目：良かったものをやり直す週</h4>
+
+<ul>
+	<li>2週目で<b>保存やDMが多かった投稿</b>を、少し形を変えて再投稿</li>
+	<li>伸びた時間帯があれば、同じ時間にもう1本</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>4週目：まとめと次の準備</h4>
+
+<ul>
+	<li>「今月のまとめ」投稿（TOP3、よくあった質問 など）</li>
+	<li>ハイライトを整理（初めての人が30秒でわかる）</li>
+	<li>来月は<b>伸びた型</b>を標準にする</li>
+</ul>
+</div>
+</div>
+
+<h3>毎週の固定スケジュール（例）</h3>
+
+<div class="grid cols-3">
+<div class="card"><b>火曜日（朝6:30）</b>
+
+<p>リール：やり方紹介（30秒以内）</p>
+
+<div class="tips">冒頭2秒で結論 &rarr; 手順3つ &rarr; 「保存して後で実践」</div>
+</div>
+
+<div class="card"><b>木曜日（12:15）</b>
+
+<p>カルーセル：図解・チェックリスト</p>
+
+<div class="tips">1枚目に答え、最後に「保存＆DMで質問OK」</div>
+</div>
+
+<div class="card"><b>土曜日（18:30）</b>
+
+<p>リール：ビフォー&rarr;アフター</p>
+
+<div class="tips">短め（15秒）版と長め（28秒）版を交互にテスト</div>
+</div>
+</div>
+
+<div class="card">
+<h3>毎日やること（ストーリーズ）</h3>
+
+<ul>
+	<li><b>朝：</b>「今日は◯◯します！」（予定や空き枠）</li>
+	<li><b>夕：</b>新規投稿の案内（プレビュー＋矢印スタンプ）</li>
+	<li><b>夜：</b>投票/質問やリンク（予約・商品ページ）</li>
+	<li><b>良いものはハイライトに保存</b>（資産にする）</li>
+</ul>
+</div>
+
+<h3>簡単チェック（15分でOK）</h3>
+
+<div class="grid cols-2">
+<div class="card"><b>見る数字</b>
+
+<ul>
+	<li>保存が多い＝「役立つ」証拠</li>
+	<li>シェアが多い＝「誰かに見せたい」証拠</li>
+	<li>プロフィールアクセス&rarr;リンククリック＝「行動」</li>
+	<li>DM件数＝「本気度」</li>
+</ul>
+</div>
+
+<div class="card"><b>次にやること</b>
+
+<ul>
+	<li>よく伸びた<strong>1つの要素</strong>だけ固定（時間・冒頭文・尺など）</li>
+	<li>他の要素を入れ替えてテスト（毎週1つでOK）</li>
+</ul>
+</div>
+</div>
+
+<h3>すぐ使える&ldquo;勝ちパターン&rdquo;例</h3>
+
+<div class="grid cols-3">
+<div class="card"><b>予約を増やしたい</b>
+
+<p>リール（ビフォー&rarr;アフター）&rarr; ストーリーズ投票 &rarr; ハイライト「空き枠」 &rarr; DM合言葉で特典</p>
+</div>
+
+<div class="card"><b>売上を伸ばしたい</b>
+
+<p>カルーセル（使い方＆コーデ）&rarr; 保存を促す &rarr; リンクスタンプで商品ページ &rarr; 週末クーポン</p>
+</div>
+
+<div class="card"><b>認知を広げたい</b>
+
+<p>リール（仕込み&rarr;完成）&rarr; 地域タグを混ぜる &rarr; ストーリーズで地図リンク</p>
+</div>
+</div>
+
+<div class="warn" style="margin-top:12px"><strong>つまづいたら：</strong>ネタ切れ＝「柱&times;切り口」を掛け算（やり方／比較／失敗&rarr;正解／チェックリスト／Q&amp;A／お客様の声）。 再生はあるが成果ゼロ＝呼びかけ（CTA）を「保存&rarr;DM&rarr;予約」の順に一本化。 時間がない＝テンプレに当て込み、撮影はまとめ撮り、字幕は定型で。</div>
+</div>
+</section>
+<!-- 10) 落とし穴 -->
+
+<section id="sec10">
+<div class="container">
+<h2>10) よくある落とし穴</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>タグ乱射</h3>
+
+<p>関係ないビッグタグは逆効果。</p>
+
+<div class="tips"><strong>回避：</strong>「内容一致」を最優先。中規模＋ローカル。</div>
+</div>
+
+<div class="card">
+<h3>テンプレ依存</h3>
+
+<p>流行BGMだけで&ldquo;中身ゼロ&rdquo;は伸びない。</p>
+
+<div class="tips"><strong>回避：</strong>最後の3秒で&ldquo;あなたの文脈&rdquo;を必ず入れる。</div>
+</div>
+
+<div class="card">
+<h3>公開で完結</h3>
+
+<p>DMや友人シェアの導線が無い。</p>
+
+<div class="tips"><strong>回避：</strong>「家族に送ってOK」など&ldquo;送る理由&rdquo;を明記。</div>
+</div>
+
+<div class="card">
+<h3>CTA不明瞭</h3>
+
+<p>何をしてほしいかが曖昧。</p>
+
+<div class="tips"><strong>回避：</strong>「保存&rarr;予約&rarr;来店」の段階を明示。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 相談 -->
+
+<section id="contact">
+<div class="container">
+<h2>メールまたはLINEで無料相談</h2>
+
+<p class="lead">Instagram投稿の運用や「一緒に作成できるPC教室」についてのご相談を無料で受け付けています。お気軽にお問い合わせください。</p>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>📧 メールで相談</h3>
+
+<p>下記メールアドレスまで直接ご連絡ください。</p>
+
+<p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+</div>
+
+<div class="card">
+<h3>💬 LINEで相談</h3>
+
+<p>LINE公式アカウントを友だち追加の上、メッセージを送ってください。</p>
+
+<p><a href="https://line.me/R/ti/p/@700zjftd" target="_blank">LINEで無料相談する</a></p>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footgrid">
+<div>
+<p class="small">&copy; サロサポ・ジギョサポデジタル教室｜事業主向け。内容の無断転載はお控えください。</p>
+
+<p class="small">このページは単一HTMLで作成。レスポンシブ対応・軽量CSS・モバイルメニュー・アクセシビリティ（aria属性）に配慮しています。</p>
+</div>
+
+<div><a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a></div>
+</div>
+</footer>
+<button aria-label="ページ上部へ" id="topBtn">▲</button><script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // Close drawer on nav click (mobile)
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
