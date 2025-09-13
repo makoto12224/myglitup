@@ -1,0 +1,474 @@
+
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="スマホは使えるけどパソコンは初めて、という方でも迷わない。ケーブルの選び方、フォルダの基本、Android/iPhone × Windows/Macの4パターン手順、トラブル解決、検索のコツ、印刷チェックリストまでを1ページで。"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=" rel="icon" />📁&quot;&gt;
+<style type="text/css">:root{
+      --bg:#0b0c0f; --card:#13151a; --ink:#e9edf1; --muted:#a8b0bb; --line:#22262e;
+      --brand:#63b3ff; --accent:#8de3b2; --ok:#78e08f; --warn:#ffd166; --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25); --radius:18px; --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb; --card:#ffffff; --ink:#111319; --muted:#5b6671; --line:#e8ecf2;
+        --brand:#2563eb; --accent:#0ea5e9; --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(24px,4.2vw,40px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow);cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:20px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    .kbd{font-family:ui-monospace,monospace;font-weight:700;padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:rgba(0,0,0,.18)}
+    /* Details (accordion) */
+    details{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+    details+details{margin-top:10px}
+    summary{cursor:pointer;font-weight:700}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+    /* Checklist printable */
+    .print-card{background:var(--card);border:1px dashed var(--line);padding:14px;border-radius:14px}
+    .checklist li{list-style:none;margin:8px 0}
+    .checklist input{transform:scale(1.2);margin-right:8px}
+</style>
+<header>
+<div class="container nav">
+<div class="brand"><span class="brand-badge">PC</span> <span>超初心者向け・スマホ写真のPC転送ガイド</span></div>
+
+<nav aria-label="主要メニュー" class="menu"><a href="#toc">目次</a> <a href="#basics">準備</a> <a href="#pc101">PCの基礎</a> <a href="#benefits">メリット</a> <a href="#flows">4通りのやり方</a> <a href="#trouble">トラブル解決</a> <a href="#search">検索のコツ</a> <a href="#glossary">用語集</a> <a href="#check">印刷チェック</a></nav>
+<button aria-expanded="false" aria-label="メニューを開く" class="hamburger" id="hamburger">☰</button></div>
+
+<div aria-hidden="true" class="drawer" id="drawer"><a href="#toc">目次</a> <a href="#intro">はじめに</a> <a href="#basics">準備（ケーブル/機器）</a> <a href="#pc101">パソコンの超基礎</a> <a href="#benefits">スマホへのメリット</a> <a href="#flows">4通りの手順</a> <a href="#trouble">トラブル解決</a> <a href="#search">検索のコツ</a> <a href="#glossary">用語集</a> <a href="#check">印刷チェックリスト</a></div>
+</header>
+
+<main>
+<section class="hero" id="intro">
+<div class="container">
+<h1>スマホの写真をパソコンにコピーする方法<br />
+<small style="font-weight:500;color:var(--muted)">ケーブル接続でかんたん・確実・安全に</small></h1>
+
+<p>対象：スマホは使えるけど、パソコンはほぼ初めての方。やさしい言葉・図解想定で、<b>Android / iPhone &times; Windows / Mac</b>の4通りをていねいに解説します。</p>
+
+<div class="cta"><a class="btn primary" href="#flows">自分の組み合わせに進む</a> <a class="btn" href="#check">印刷チェックだけ使う</a> <a class="btn" href="#trouble">困ったときの解決へ</a></div>
+
+<div class="toc" id="toc" style="margin-top:20px"><a href="#intro">0) はじめに</a> <a href="#basics">1) 準備（ケーブル/機器/安全）</a> <a href="#pc101">2) パソコンの超基礎（フォルダ/ドラッグ&amp;ドロップ）</a> <a href="#benefits">2.5) スマホにとってのメリット</a> <a href="#flows">3) 4通りの手順（Android/iPhone &times; Windows/Mac）</a> <a href="#trouble">4) トラブル解決</a> <a href="#search">5) 検索のコツ（機種別ワード）</a> <a href="#glossary">6) 用語集（3分でわかる）</a> <a href="#next">7) 次の一歩（整理/バックアップ）</a> <a href="#check">付録）印刷チェックリスト</a></div>
+</div>
+</section>
+<!-- 準備 --><!-- スマホへのメリット -->
+
+<section id="benefits">
+<div class="container">
+<h2>2.5) これをやる&ldquo;スマホ側&rdquo;のメリット</h2>
+
+<p class="lead">写真をパソコンにコピーできるようになると、スマホにも良いことがたくさんあります。</p>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>① 容量が空いて軽くなる</h3>
+
+<p>写真・動画は容量を大きく使います。パソコンへ移せば空きが増え、アプリの更新や新規撮影がスムーズに。</p>
+</div>
+
+<div class="card">
+<h3>② 安心のバックアップ</h3>
+
+<p>故障・紛失・水没のときも、パソコンにコピーがあれば思い出を守れます。</p>
+</div>
+
+<div class="card">
+<h3>③ 整理しやすい</h3>
+
+<p>大画面でフォルダ分け・名前変更が簡単。スマホ内アルバムのごちゃごちゃ解消。</p>
+</div>
+
+<div class="card">
+<h3>④ 機種変更がラク</h3>
+
+<p>新しいスマホに移したい写真を、パソコンからスムーズに再コピーできます。</p>
+</div>
+
+<div class="card">
+<h3>⑤ 長期保存に強い</h3>
+
+<p>外付けHDD/SSDやクラウドにも二重保存でき、10年単位の保管がしやすくなります。</p>
+</div>
+
+<div class="card">
+<h3>＋&alpha;：家族と共有しやすい</h3>
+
+<p>パソコンでまとめて選んで、USBメモリやクラウド経由で家族に渡せます。</p>
+</div>
+</div>
+
+<div class="tips" style="margin-top:10px"><b>まずはコピーのみ：</b>慣れるまでスマホ側の削除はしないでOK。パソコンに写真があることを確認してから整理しましょう。</div>
+</div>
+</section>
+
+<section id="basics">
+<div class="container">
+<h2>1) 準備（ケーブル/機器/安全）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>まずは種類を確認</h3>
+
+<ul>
+	<li><b>スマホ：</b>Android か iPhone（機種名もメモ）</li>
+	<li><b>パソコン：</b>Windows か Mac（新しめ？古め？）</li>
+	<li><b>PCの差込口：</b>USB-A（四角）か USB-C（細長）</li>
+</ul>
+
+<div class="tips"><b>メモ例：</b>「Pixel 7」「iPhone 13」「Windows 11」「MacBook Air(USB-Cのみ)」</div>
+</div>
+
+<div class="card">
+<h3>ケーブルの見分け方</h3>
+
+<ul>
+	<li><b>iPhone：</b>Lightning か USB-C（新しめ）</li>
+	<li><b>Android：</b>USB-C（主流）／Micro‑USB（古め）</li>
+	<li><b>PC側：</b>USB-A or USB-C（合わなければ変換アダプタ）</li>
+	<li><b>データ転送対応</b>のケーブルを使う（充電専用は不可）</li>
+</ul>
+
+<div class="warn"><b>注意：</b>100円ケーブルは&ldquo;充電だけ&rdquo;のことが多いです。</div>
+</div>
+</div>
+
+<details style="margin-top:12px"><summary>安全のための3カ条</summary>
+
+<ul>
+	<li>作業前にスマホ/PCの<b>ロック解除</b>と<b>バッテリー50%以上</b>を確認</li>
+	<li>ケーブルは<b>まっすぐ優しく</b>抜き差し（斜めに力をかけない）</li>
+	<li>初回は<b>コピー</b>のみ（移動は慣れてから）</li>
+</ul>
+</details>
+</div>
+</section>
+<!-- パソコンの基礎 -->
+
+<section id="pc101">
+<div class="container">
+<h2>2) パソコンの超基礎（フォルダ/ドラッグ&amp;ドロップ）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>フォルダ＝写真の&ldquo;入れ物&rdquo;</h3>
+
+<p>Windowsは<b>エクスプローラー</b>、Macは<b>Finder</b>でフォルダを開きます。最初に<b>「スマホ写真」</b>などの保存用フォルダを作っておきましょう。</p>
+
+<div class="code">【新しいフォルダ名の例】 2025-09_家族写真 旅行_福岡 スマホ写真_取り込み用</div>
+</div>
+
+<div class="card">
+<h3>ドラッグ＆ドロップ</h3>
+
+<p>ファイル（写真）を<b>つかんで&rarr;運んで&rarr;離す</b>操作。まずは<b>コピー</b>でOK。写真を選んで保存用フォルダへドラッグします。</p>
+
+<div class="tips"><span class="kbd">Ctrl</span> / <span class="kbd">⌘</span> を押しながらクリックで複数選択。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4つの手順 -->
+
+<section id="flows">
+<div class="container">
+<h2>3) 4通りの手順（Android/iPhone &times; Windows/Mac）</h2>
+
+<details open=""><summary>① Android &times; Windows（いちばん簡単）</summary>
+
+<ol>
+	<li>スマホとPCをUSBケーブルでつなぐ</li>
+	<li>スマホ通知から<b>USBの用途</b>を開き、<b>「ファイル転送」</b>を選ぶ</li>
+	<li>PCで<b>エクスプローラー</b>&rarr;スマホ名&rarr;<b>内部ストレージ</b>&rarr;<b>DCIM</b> を開く</li>
+	<li>写真を選び、PCの保存用フォルダへ<b>ドラッグ＆ドロップ</b></li>
+	<li>終わったら右下の<b>ハードウェアの安全な取り外し</b>から外す（推奨）</li>
+</ol>
+
+<div class="tips"><b>コツ：</b>大量なら<b>フォルダごと</b>コピーするとラク。</div>
+</details>
+
+<details><summary>② Android &times; Mac（Android File Transferを使用）</summary>
+
+<ol>
+	<li>スマホとMacをケーブルで接続（USB-CのみのMacは対応ケーブルを）</li>
+	<li>スマホで<b>「ファイル転送」</b>を選ぶ</li>
+	<li>Macで<b>Android File Transfer</b>を起動（未導入なら公式から入手）</li>
+	<li>アプリ内で <b>DCIM</b> を開き、写真をFinderの保存フォルダへドラッグ</li>
+</ol>
+
+<div class="warn"><b>ヒント：</b>アプリが開かないときはケーブルを抜き差し or 再起動。</div>
+</details>
+
+<details><summary>③ iPhone &times; Windows（DCIMからコピー）</summary>
+
+<ol>
+	<li>iPhoneとPCをケーブルで接続</li>
+	<li>iPhoneのロックを解除&rarr;<b>「このコンピュータを信頼」</b>&rarr;<b>信頼</b></li>
+	<li>PCで<b>エクスプローラー</b>&rarr;<b>Apple iPhone</b>&rarr;<b>DCIM</b> を開く</li>
+	<li>写真を選んで保存用フォルダへドラッグ＆ドロップ</li>
+</ol>
+
+<div class="tips"><b>補足：</b>Windows「フォト」アプリの<b>インポート</b>でもOK。</div>
+</details>
+
+<details><summary>④ iPhone &times; Mac（標準アプリで読み込み）</summary>
+
+<ol>
+	<li>iPhoneとMacを接続&rarr;iPhoneのロック解除&rarr;<b>信頼</b></li>
+	<li>Macの<b>イメージキャプチャ</b>を起動（または<b>写真</b>アプリ）</li>
+	<li>左のデバイス一覧からiPhoneを選び、取り込みたい写真を選択</li>
+	<li><b>読み込み</b>（または<b>すべて読み込み</b>）を押して保存</li>
+</ol>
+
+<div class="tips"><b>コツ：</b>保存先フォルダを最初に指定しておくと迷わない。</div>
+</details>
+</div>
+</section>
+<!-- トラブル -->
+
+<section id="trouble">
+<div class="container">
+<h2>4) うまくいかないとき（トラブル解決）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>スマホをPCが認識しない</h3>
+
+<ul>
+	<li>ケーブルが<b>データ対応</b>か確認（充電専用NG）</li>
+	<li>別のUSBポート/別ケーブルで試す</li>
+	<li>スマホの<b>ロック解除</b>&rarr;もう一度接続</li>
+	<li>Android：通知から<b>ファイル転送</b>に切替</li>
+	<li>再起動（スマホ/PC）</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>写真が見えない/空っぽに見える</h3>
+
+<ul>
+	<li>iPhone：<b>「信頼」</b>を押したか確認、ケーブル抜き差し</li>
+	<li>Android：DCIMの下の<b>Camera</b>などフォルダを開く</li>
+	<li>Mac：Android File Transferを<b>再起動</b></li>
+	<li>Windows：<b>フォト</b>アプリのインポートを試す</li>
+</ul>
+</div>
+</div>
+
+<div class="warn" style="margin-top:10px"><b>まずはコピーのみ：</b>慣れないうちはスマホ側の削除はしない（PCに写真があることを確認してから）。</div>
+</div>
+</section>
+<!-- 検索のコツ -->
+
+<section id="search">
+<div class="container">
+<h2>5) 機種ごとの検索のコツ（そのまま入力OK）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>Androidの例</h3>
+
+<div class="code">Pixel 7 Windows 写真 転送 Xperia 10 Mac 写真 コピー Galaxy S23 Windows DCIM 見つからない</div>
+</div>
+
+<div class="card">
+<h3>iPhoneの例</h3>
+
+<div class="code">iPhone 13 Windows DCIM 開けない iPhone 写真 Mac 取り込み できない iPhone 信頼 コンピュータ 表示されない</div>
+</div>
+</div>
+
+<div class="tips" style="margin-top:8px"><b>コツ：</b>「機種名」＋「PC種類」＋「写真 転送/取り込み/コピー」＋困っている内容（日本語でOK）。</div>
+</div>
+</section>
+<!-- 用語集 -->
+
+<section id="glossary">
+<div class="container">
+<h2>6) 用語集（3分でわかる）</h2>
+
+<div class="grid cols-3">
+<div class="card"><b>DCIM</b>
+
+<p>カメラ写真が入る標準フォルダ名（スマホ内）。</p>
+</div>
+
+<div class="card"><b>ドラッグ＆ドロップ</b>
+
+<p>ファイルをつかんで移動&rarr;離して置く操作。</p>
+</div>
+
+<div class="card"><b>インポート</b>
+
+<p>アプリを使って取り込むこと（写真/フォトなど）。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 次の一歩 -->
+
+<section id="next">
+<div class="container">
+<h2>7) 次の一歩（整理/バックアップ）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>フォルダでスッキリ</h3>
+
+<ul>
+	<li>年月やイベント名でフォルダ分け</li>
+	<li>良い写真だけ「BEST」へコピー</li>
+	<li>月に一度の整理タイムをカレンダー登録</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>安心の二重保存</h3>
+
+<ul>
+	<li>外付けHDD/SSDに丸ごとコピー</li>
+	<li>クラウドにも1セット（容量に余裕があれば）</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- チェックリスト -->
+
+<section id="check">
+<div class="container">
+<h2>付録）印刷チェックリスト（初回の作業メモ）</h2>
+
+<div class="print-card">
+<ul class="checklist">
+	<li><label><input type="checkbox" />自分の組み合わせ：Android / iPhone &times; Windows / Mac を確認</label></li>
+	<li><label><input type="checkbox" />データ転送に対応したケーブルを準備（USB-A/USB-C/Lightning）</label></li>
+	<li><label><input type="checkbox" />PCに保存用フォルダを作成（例：スマホ写真_取り込み用）</label></li>
+	<li><label><input type="checkbox" />スマホのロック解除・PCの電源ON</label></li>
+	<li><label><input type="checkbox" />（Android）USB設定を「ファイル転送」に変更</label></li>
+	<li><label><input type="checkbox" />（iPhone）「このコンピュータを信頼」を押した</label></li>
+	<li><label><input type="checkbox" />DCIM/Cameraフォルダを開き、写真を<b>コピー</b>で保存</label></li>
+	<li><label><input type="checkbox" />コピー後、写真がPCにあることを確認</label></li>
+	<li><label><input type="checkbox" />慣れてからスマホ側の整理（削除/アルバム整理）</label></li>
+</ul>
+
+<p class="small">※印刷はブラウザの「印刷」からどうぞ。</p>
+</div>
+</div>
+</section>
+<!-- 相談（ユーザー提供そのまま） -->
+
+<section id="contact">
+<div class="container">
+<h2>メールまたはLINEで無料相談</h2>
+
+<p class="lead">ご相談を無料で受け付けています。お気軽にお問い合わせください。</p>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>📧 メールで相談</h3>
+
+<p>下記メールアドレスまで直接ご連絡ください。</p>
+
+<p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+</div>
+
+<div class="card">
+<h3>💬 LINEで相談</h3>
+
+<p>LINE公式アカウントを友だち追加の上、メッセージを送ってください。</p>
+
+<p><a href="https://line.me/R/ti/p/@700zjftd" target="_blank">LINEで無料相談する</a></p>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footgrid">
+<div>
+<p class="small">&copy; 2025 スマホ&rarr;PC写真転送ガイド（ケーブル接続版）。本ページは単一HTML/レスポンシブ対応で作成しています。</p>
+</div>
+
+<div><a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a></div>
+</div>
+</footer>
+<button aria-label="ページ上部へ" id="topBtn">▲</button><script>
+  // Mobile drawer
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+  // Back to top
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+</script>
