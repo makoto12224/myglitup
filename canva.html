@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>スマホで撮ってPCで編集！Canva連携ガイド（超初心者向け）</title>
+  <meta name="description" content="スマホで撮った写真をCanvaにアップし、同じアカウントでパソコンから編集するまでを、超初心者でも迷わないように丁寧に文章だけで解説。Android・iPhone・Windows・Macすべて対応。">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
+  <style>
+    :root{
+      --bg:#0b0c0f;
+      --card:#13151a;
+      --ink:#e9edf1;
+      --muted:#a8b0bb;
+      --line:#22262e;
+      --brand:#63b3ff;
+      --accent:#8de3b2;
+      --warn:#ffd166;
+      --ok:#78e08f;
+      --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25);
+      --radius:18px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --ink:#111319;
+        --muted:#5b6671;
+        --line:#e8ecf2;
+        --brand:#2563eb;
+        --accent:#0ea5e9;
+        --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{背景:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <div class="brand">
+      <span class="brand-badge">CV</span>
+      <span>スマホで撮ってPCで編集！Canva連携ガイド</span>
+    </div>
+    <nav class="menu" aria-label="主要メニュー">
+      <a href="#toc">目次</a>
+      <a href="#sec0">はじめに</a>
+      <a href="#sec1">準備</a>
+      <a href="#sec2">アカウント作成</a>
+      <a href="#sec3">スマホ操作</a>
+      <a href="#sec4">PC操作</a>
+      <a href="#sec5">アップロード</a>
+      <a href="#sec6">編集</a>
+      <a href="#sec7">保存</a>
+      <a href="#sec8">トラブル</a>
+      <a href="#sec9">メリット</a>
+      <a href="#contact">相談</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">☰</button>
+  </div>
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <a href="#toc">目次</a>
+    <a href="#sec0">はじめに</a>
+    <a href="#sec1">準備</a>
+    <a href="#sec2">アカウント作成</a>
+    <a href="#sec3">スマホ操作</a>
+    <a href="#sec4">PC操作</a>
+    <a href="#sec5">アップロード</a>
+    <a href="#sec6">編集</a>
+    <a href="#sec7">保存</a>
+    <a href="#sec8">トラブル</a>
+    <a href="#sec9">メリット</a>
+    <a href="#contact">無料相談</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1>スマホで撮ってPCで編集！<br><small style="font-weight:500;color:var(--muted)">同じアカウントでCanvaを使い、写真をスムーズに編集する方法</small></h1>
+      <p>この資料は、むずかしい言葉を使わずに、<b>文章だけ</b>で手順を説明します。スマホ（Android / iPhone）とパソコン（Windows / Mac）のどれでも大丈夫です。</p>
+      <div class="cta">
+        <a class="btn primary" href="#sec5">今すぐアップロード手順を見る</a>
+        <a class="btn" href="#sec6">PCで編集のやり方を見る</a>
+        <a class="btn" href="#contact">困ったら無料相談</a>
+      </div>
+      <div class="kpis">
+        <div class="card"><div class="num">同じアカウント</div><div class="small">スマホとPCで統一</div></div>
+        <div class="card"><div class="num">ケーブル不要</div><div class="small">写真はネットで自動同期</div></div>
+        <div class="card"><div class="num">はじめてOK</div><div class="small">文章だけで丁寧に説明</div></div>
+        <div class="card"><div class="num">全部対応</div><div class="small">Android・iPhone・Win・Mac</div></div>
+      </div>
+
+      <div id="toc" class="toc" style="margin-top:20px">
+        <a href="#sec0">0) はじめに：この資料でできること</a>
+        <a href="#sec1">1) 準備すること（アカウント確認）</a>
+        <a href="#sec2">2) Canvaアカウントを新しく作る（持っていない場合）</a>
+        <a href="#sec3">3) スマホの準備（Android / iPhone）</a>
+        <a href="#sec4">4) パソコンの準備（Windows / Mac）</a>
+        <a href="#sec5">5) スマホからCanvaに写真をアップロード</a>
+        <a href="#sec6">6) パソコンで写真を見つけて編集する</a>
+        <a href="#sec7">7) できた画像を保存（ダウンロード）</a>
+        <a href="#sec8">8) うまくいかない時のチェック</a>
+        <a href="#sec9">9) スマホ×PCで使うメリット</a>
+        <a href="#contact">10) メールまたはLINEで無料相談</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 0) はじめに -->
+  <section id="sec0">
+    <div class="container">
+      <h2>0) はじめに：この資料でできること</h2>
+      <div class="card">
+        <p class="lead">スマホで撮った写真を、スマホのCanvaアプリに入れます。つづいて、同じアカウントでパソコンのCanvaに入り、写真を使って<b>かんたん編集</b>します。</p>
+        <ul>
+          <li>ケーブルは不要です。ネットで自動的にそろいます。</li>
+          <li>「押す」「開く」などの言い方で、やさしく説明します。</li>
+          <li>Android / iPhone / Windows / Mac の全部に対応しています。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1) 準備 -->
+  <section id="sec1">
+    <div class="container">
+      <h2>1) 準備すること（アカウント確認）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>同じアカウントで使う</h3>
+          <p>スマホとパソコンで<b>同じメールアドレス</b>のCanvaアカウントに入ります。これがそろっていないと、写真が見えません。</p>
+          <div class="tips"><strong>コツ：</strong>スマホでログイン中のメールアドレスをメモしておき、パソコンでも同じものを入れます。</div>
+        </div>
+        <div class="card">
+          <h3>ネット回線</h3>
+          <p>写真を送るにはネットが必要です。家の<b>Wi-Fi</b>につながっていると、時間が短くなりやすいです。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2) アカウント作成 -->
+  <section id="sec2">
+    <div class="container">
+      <h2>2) Canvaアカウントを新しく作る（持っていない場合）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>スマホで作る</h3>
+          <div class="code">① アプリストアで「Canva」を入れる
+② アプリを開き「登録」を押す
+③ メールアドレスとパスワードを入れる（忘れないようメモ）
+④ 名前を入れて完了</div>
+        </div>
+        <div class="card">
+          <h3>パソコンで作る</h3>
+          <div class="code">① ブラウザ（ネットを見るアプリ）で canva.com を開く
+② 右上の「登録」を押す
+③ メールアドレスとパスワードを入れる
+④ 名前を入れて完了</div>
+          <div class="warn"><strong>メモ：</strong>パスワードは紙にも控えると安心です。家族が手伝う時にも役立ちます。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3) スマホの準備 -->
+  <section id="sec3">
+    <div class="container">
+      <h2>3) スマホの準備（Android / iPhone）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Android</h3>
+          <ul>
+            <li>Playストアで「Canva」を入れる</li>
+            <li>アプリを開き、メールとパスワードでログイン</li>
+            <li>写真へのアクセスは「許可」にする</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>iPhone</h3>
+          <ul>
+            <li>App Storeで「Canva」を入れる</li>
+            <li>アプリを開き、同じアカウントでログイン</li>
+            <li>「写真へのアクセス」は<b>すべての写真を許可</b>にする</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tips" style="margin-top:10px"><strong>ポイント：</strong>スマホで撮った写真を使うには、Canvaが写真を見られる必要があります。アクセスを許可しましょう。</div>
+    </div>
+  </section>
+
+  <!-- 4) PCの準備 -->
+  <section id="sec4">
+    <div class="container">
+      <h2>4) パソコンの準備（Windows / Mac）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Windows</h3>
+          <div class="code">① 左下「スタート」→「Edge」または「Chrome」を開く
+② 上の白い枠（アドレスバー）に canva.com と入れてEnter
+③ 右上の「ログイン」から、スマホと同じメール・パスワードで入る</div>
+        </div>
+        <div class="card">
+          <h3>Mac</h3>
+          <div class="code">① Dockの「Safari」または「Chrome」を開く
+② アドレスバーに canva.com と入れてEnter
+③ 右上の「ログイン」→ スマホと同じアカウントで入る</div>
+        </div>
+      </div>
+      <div class="warn" style="margin-top:10px"><strong>注意：</strong>別のアカウントで入っていると、写真が出てきません。右上のプロフィールからメールアドレスを確認しましょう。</div>
+    </div>
+  </section>
+
+  <!-- 5) アップロード -->
+  <section id="sec5">
+    <div class="container">
+      <h2>5) スマホからCanvaに写真をアップロード</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>やり方（共通）</h3>
+          <div class="code">① スマホでCanvaアプリを開く
+② 画面の「＋（プラス）」または「アップロード」を押す
+③ 「写真」を選ぶ → 使いたい写真にチェック
+④ 「追加」または「アップロード」を押す
+⑤ 送信が終わるまで待つ（Wi-Fi推奨）</div>
+        </div>
+        <div class="card">
+          <h3>複数まとめてのコツ</h3>
+          <ul>
+            <li>写真はまとめて選べます</li>
+            <li>回線が遅い時は、何回かに分けると失敗しにくいです</li>
+            <li>アップロード中はアプリを閉じない方が安全です</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tips" style="margin-top:10px"><strong>見え方：</strong>アップロードが終わると、PCのCanvaの「アップロード」や「最近のファイル」に出てきます。</div>
+    </div>
+  </section>
+
+  <!-- 6) PCで編集 -->
+  <section id="sec6">
+    <div class="container">
+      <h2>6) パソコンで写真を見つけて編集する</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>写真を見つける</h3>
+          <div class="code">① PCでcanva.comにログイン
+② 左の「アップロード」または「素材」を開く
+③ 「最近」や「アップロード」から写真をクリック</div>
+          <p>写真をキャンバスに置くと、編集できる状態になります。</p>
+        </div>
+        <div class="card">
+          <h3>かんたん編集（初めてでもOK）</h3>
+          <ul>
+            <li><b>トリミング：</b>写真のいらない四角を切り取る</li>
+            <li><b>回転：</b>傾きを直す</li>
+            <li><b>明るさ・色：</b>「調整」から少しずつ動かす</li>
+            <li><b>文字：</b>左の「テキスト」→ 好きな文字を入れる（大きさ・色が変えられます）</li>
+            <li><b>図形・スタンプ：</b>左の「素材」から選んで置くだけ</li>
+          </ul>
+          <div class="tips"><strong>迷ったら：</strong>「テンプレート」から、用途（チラシ／SNSなど）を選ぶと形が決まって楽です。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7) 保存 -->
+  <section id="sec7">
+    <div class="container">
+      <h2>7) できた画像を保存（ダウンロード）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>書き出しのやり方</h3>
+          <div class="code">① 右上の「共有」を押す
+② 「ダウンロード」を押す
+③ 種類をえらぶ → おすすめは「PNG」
+④ 「ダウンロード」を押す → 保存完了</div>
+          <p>保存場所は、WindowsもMacも<b>「ダウンロード」</b>フォルダです。</p>
+        </div>
+        <div class="card">
+          <h3>名前の付け方の例</h3>
+          <p class="code">2025-09_イベント案内_A.png</p>
+          <p>日付や用途を入れると、あとで探しやすくなります。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8) トラブル -->
+  <section id="sec8">
+    <div class="container">
+      <h2>8) うまくいかない時のチェック</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>写真がPCに出ない</h3>
+          <ul>
+            <li>PCの画面を更新（再読み込み）する</li>
+            <li>スマホのアップロードが終わっているか見る</li>
+            <li>スマホとPCで同じメールか確認する</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>遅い・止まる</h3>
+          <ul>
+            <li>Wi-Fiにつなぐ</li>
+            <li>一度に送る枚数を少なくする</li>
+            <li>他のアプリを閉じる</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>文字がずれる</h3>
+          <ul>
+            <li>日本語フォントをえらぶ</li>
+            <li>行間・文字間を少し広げる</li>
+            <li>サイズを少し小さくする</li>
+          </ul>
+        </div>
+      </div>
+      <div class="warn" style="margin-top:10px"><strong>注意：</strong>アカウントが違うと、写真は見えません。右上のプロフィールでメールアドレスを必ず確認しましょう。</div>
+    </div>
+  </section>
+
+  <!-- 9) メリット -->
+  <section id="sec9">
+    <div class="container">
+      <h2>9) スマホ×PCで使うメリット</h2>
+      <div class="grid cols-3">
+        <div class="card"><h3>作業がラク</h3><p>撮影はスマホ、編集はPCで広い画面。作業が早くて楽になります。</p></div>
+        <div class="card"><h3>ケーブル不要</h3><p>ネットで写真がそろうので、つなぐ手間がありません。</p></div>
+        <div class="card"><h3>共有しやすい</h3><p>できた画像はリンクやQRで送れます。チームや家族とも簡単。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 相談 -->
+  <section id="contact">
+    <div class="container">
+      <h2>メールまたはLINEで無料相談</h2>
+      <p class="lead">Canvaの設定や写真の編集でつまづいたら、お気軽にご連絡ください。</p>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>📧 メールで相談</h3>
+          <p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+        </div>
+        <div class="card">
+          <h3>💬 LINEで相談</h3>
+          <p><a href="https://line.me/R/ti/p/@700zjftd" target="_blank">LINEで無料相談する</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footgrid">
+    <div>
+      <p class="small">© サロサポ・ジギョサポデジタル教室｜スマホ×PC Canva連携ガイド（超初心者向け）。内容の無断転載はご遠慮ください。</p>
+      <p class="small">このページは単一HTMLで作成。レスポンシブ対応・軽量CSS・モバイルメニュー・アクセシビリティ（aria属性）に配慮しています。</p>
+    </div>
+    <div>
+      <a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a>
+    </div>
+  </div>
+</footer>
+
+<button id="topBtn" aria-label="ページ上部へ">▲</button>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
+</body>
+</html>
