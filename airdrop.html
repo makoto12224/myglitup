@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>超初心者向け｜iPhone→Mac 無線転送ガイド（AirDrop）</title>
+  <meta name="description" content="スマホは使えるけどパソコンは苦手、という超初心者向け。iPhoneからMacへ、AirDropで写真を無線で送る方法をやさしく解説。準備、手順、保存先、トラブル対策、メリットまで。">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Favicon（任意） -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📤</text></svg>">
+  <style>
+    :root{
+      --bg:#0b0c0f;
+      --card:#13151a;
+      --ink:#e9edf1;
+      --muted:#a8b0bb;
+      --line:#22262e;
+      --brand:#63b3ff;
+      --accent:#8de3b2;
+      --warn:#ffd166;
+      --ok:#78e08f;
+      --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25);
+      --radius:18px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --ink:#111319;
+        --muted:#5b6671;
+        --line:#e8ecf2;
+        --brand:#2563eb;
+        --accent:#0ea5e9;
+        --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <div class="brand">
+      <span class="brand-badge">AD</span>
+      <span>iPhone→Mac 無線転送ガイド（AirDrop）</span>
+    </div>
+    <nav class="menu" aria-label="主要メニュー">
+      <a href="#toc">目次</a>
+      <a href="#sec0">はじめに</a>
+      <a href="#sec1">基礎</a>
+      <a href="#sec2">準備</a>
+      <a href="#sec3">手順</a>
+      <a href="#sec4">保存先</a>
+      <a href="#sec5">トラブル</a>
+      <a href="#sec6">メリット</a>
+      <a href="#sec7">用語</a>
+      <a href="#sec8">Q&A</a>
+      <a href="#contact">相談</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">☰</button>
+  </div>
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <a href="#toc">目次</a>
+    <a href="#sec0">はじめに</a>
+    <a href="#sec1">AirDropの基礎</a>
+    <a href="#sec2">準備（設定）</a>
+    <a href="#sec3">転送の手順</a>
+    <a href="#sec4">保存場所</a>
+    <a href="#sec5">うまくいかない時</a>
+    <a href="#sec6">iPhoneのメリット</a>
+    <a href="#sec7">用語ミニ解説</a>
+    <a href="#sec8">よくある質問</a>
+    <a href="#contact">無料相談</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1>写真をケーブルなしで送ろう<br><small style="font-weight:500;color:var(--muted)">超初心者でもできる：AirDropの使い方</small></h1>
+      <p>iPhoneからMacへ、ワンタップで写真を無線転送。準備→手順→保存先→困った時→メリットまで、この1ページで。</p>
+      <div class="cta">
+        <a class="btn primary" href="#sec3">今すぐ手順を見る</a>
+        <a class="btn" href="#sec5">困った時のチェック</a>
+        <a class="btn" href="#contact">無料で相談する</a>
+      </div>
+      <div class="kpis">
+        <div class="card"><div class="num">ケーブル不要</div><div class="small">Wi-Fi/Bluetoothで直接送信</div></div>
+        <div class="card"><div class="num">10m目安</div><div class="small">近くに置けばOK</div></div>
+        <div class="card"><div class="num">無料</div><div class="small">通信料もかかりません</div></div>
+        <div class="card"><div class="num">高速</div><div class="small">大量の写真も一気に</div></div>
+      </div>
+      <div id="toc" class="toc" style="margin-top:20px">
+        <a href="#sec0">0) はじめに：無線転送とは？</a>
+        <a href="#sec1">1) AirDropの意味と基礎</a>
+        <a href="#sec2">2) iPhoneとMacの準備（設定）</a>
+        <a href="#sec3">3) 転送の手順</a>
+        <a href="#sec4">4) 保存場所の確認</a>
+        <a href="#sec5">5) うまくいかない時</a>
+        <a href="#sec6">6) iPhoneにとってのメリット</a>
+        <a href="#sec7">7) 用語ミニ解説</a>
+        <a href="#sec8">8) よくある質問（Q&A）</a>
+        <a href="#contact">9) 無料相談</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 0) はじめに -->
+  <section id="sec0">
+    <div class="container">
+      <h2>0) はじめに：無線転送とは？</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <p class="lead">ケーブルを使わずに、近くの機器どうしで写真をやり取りします。</p>
+          <ul>
+            <li>インターネットは不要（通信料ゼロ）</li>
+            <li>Appleの機器同士で使えます（iPhone / iPad / Mac）</li>
+            <li>今回は <b>iPhone → Mac</b> に特化して解説します</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tips"><strong>ポイント：</strong>AndroidやWindowsには直接は送れません。シリーズ別資料で扱います。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1) 基礎 -->
+  <section id="sec1">
+    <div class="container">
+      <h2>1) AirDropの意味と基礎</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>AirDropって？</h3>
+          <p>Appleの標準機能。写真や書類を<strong>無線で直接</strong>送れます。</p>
+          <ul>
+            <li>アプリ不要・無料</li>
+            <li>近づけるだけ（目安10m）</li>
+            <li>早くてカンタン</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>どうやって動く？</h3>
+          <p>相手を見つけるのは<strong>Bluetooth</strong>、データを送るのは<strong>Wi-Fi</strong>。だから速い！</p>
+          <div class="warn"><strong>公共の場では：</strong>使い終わったら受信設定を「連絡先のみ」か「受信しない」に。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2) 準備 -->
+  <section id="sec2">
+    <div class="container">
+      <h2>2) iPhoneとMacの準備（設定）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>iPhoneの設定</h3>
+          <ul>
+            <li>設定アプリで <b>Wi-Fi</b> と <b>Bluetooth</b> をオン</li>
+            <li><b>設定 → 一般 → AirDrop</b> を開き、初回は <b>「すべての人」</b> に</li>
+            <li><b>インターネット共有（テザリング）</b>はオフ</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Macの設定</h3>
+          <ul>
+            <li>右上のアイコンで <b>Wi-Fi</b> と <b>Bluetooth</b> をオン</li>
+            <li>Finderで <b>AirDrop</b> を開き、下部の「検出可能」を <b>全員</b> に</li>
+            <li>同じApple IDだと、自分宛は自動受信になる場合あり</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3) 手順 -->
+  <section id="sec3">
+    <div class="container">
+      <h2>3) 転送の手順（iPhone → Mac）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <span class="tag">操作のながれ</span>
+          <div class="code">① 写真アプリで送りたい写真を選ぶ
+② 共有ボタン（□から↑）をタップ
+③ 「AirDrop」をタップ
+④ 出てきた一覧から相手のMac名をタップ
+⑤ Mac側で「受け入れる」をクリック → 完了</div>
+        </div>
+        <div class="card">
+          <span class="tag">コツ</span>
+          <ul>
+            <li>複数枚をまとめて送れます</li>
+            <li>見つからない時は、端末を近づける</li>
+            <li>通知が出ない時は、受信設定とWi-Fi/Bluetoothを再確認</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4) 保存先 -->
+  <section id="sec4">
+    <div class="container">
+      <h2>4) 保存場所の確認</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Macに届いた写真</h3>
+          <p><b>「ダウンロード」フォルダ</b>に保存されます。Finderの左メニューから開けます。</p>
+          <div class="tips">ダブルクリックで表示。「写真」アプリにドラッグ＆ドロップで取り込みもOK。</div>
+        </div>
+        <div class="card">
+          <h3>見当たらない時</h3>
+          <ul>
+            <li>Finderの検索でファイル名/種類を探す</li>
+            <li>「最近の項目」を確認</li>
+            <li>もう一度受信して保存先の表示をチェック</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5) トラブル -->
+  <section id="sec5">
+    <div class="container">
+      <h2>5) うまくいかない時のチェック</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>基本チェック</h3>
+          <ul>
+            <li>両方の <b>Wi-Fi / Bluetooth</b> はオン？</li>
+            <li>端末は近い？（目安10m以内）</li>
+            <li>iPhoneの <b>テザリングはオフ</b>？</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>受信設定</h3>
+          <ul>
+            <li>iPhone：<b>すべての人</b> になっている？</li>
+            <li>Mac：AirDrop画面の検出可能が <b>全員</b>？</li>
+            <li>通知が出たら <b>受け入れる</b> をクリック</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>リフレッシュ</h3>
+          <ul>
+            <li>コントロールセンターでWi-Fi/BTを一度オフ→オン</li>
+            <li>iPhone/Macを再起動</li>
+            <li>OSアップデートも確認</li>
+          </ul>
+        </div>
+      </div>
+      <div class="warn" style="margin-top:10px"><strong>メモ：</strong>古い機種やOSだと見つけづらいことがあります。</div>
+    </div>
+  </section>
+
+  <!-- 6) メリット -->
+  <section id="sec6">
+    <div class="container">
+      <h2>6) iPhoneにとってのメリット</h2>
+      <div class="grid cols-3">
+        <div class="card"><h3>容量に余裕</h3><p>Macに移せばiPhoneの空きが増え、撮影やアプリがスムーズ。</p></div>
+        <div class="card"><h3>安心バックアップ</h3><p>思い出をMacにも保存。もしもの時に安心。</p></div>
+        <div class="card"><h3>速くて無料</h3><p>インターネット不要。大容量も短時間で送れる。</p></div>
+      </div>
+      <div class="tips" style="margin-top:10px"><strong>最初はコピーだけ：</strong>慣れるまでiPhone側の写真は消さず、Macで確認してから整理。</div>
+    </div>
+  </section>
+
+  <!-- 7) 用語 -->
+  <section id="sec7">
+    <div class="container">
+      <h2>7) 用語ミニ解説</h2>
+      <div class="grid cols-3">
+        <div class="card"><h3>Wi-Fi</h3><p>ケーブルなしでデータをやり取りする無線。AirDropではデータ転送に使う。</p></div>
+        <div class="card"><h3>Bluetooth</h3><p>近くの機器を見つける無線。AirDropでは相手探しに使う。</p></div>
+        <div class="card"><h3>AirDrop</h3><p>Appleの「その場でサッと送れる」機能。iPhoneとMacで便利。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8) Q&A -->
+  <section id="sec8">
+    <div class="container">
+      <h2>8) よくある質問（Q&A）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>お金はかかる？</h3>
+          <p>かかりません。通信料も不要です。</p>
+          <h3>どのくらい離れてOK？</h3>
+          <p>目安は10m。できれば同じ部屋で。</p>
+        </div>
+        <div class="card">
+          <h3>大量の写真は？</h3>
+          <p>まとめてOK。とても速いです。</p>
+          <h3>知らない人から届く心配は？</h3>
+          <p>受け入れ確認が出ます。公共の場では「連絡先のみ」に。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 相談 -->
+  <section id="contact">
+    <div class="container">
+      <h2>メールまたはLINEで無料相談</h2>
+      <p class="lead">AirDropや写真整理でつまづいたら、お気軽にどうぞ。</p>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>📧 メールで相談</h3>
+          <p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+        </div>
+        <div class="card">
+          <h3>💬 LINEで相談</h3>
+          <p><a href="https://line.me/R/ti/p/@700zjftd" target="_blank">LINEで無料相談する</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footgrid">
+    <div>
+      <p class="small">© サロサポ・ジギョサポデジタル教室｜超初心者向け 無線転送ガイド（AirDrop）。内容の無断転載はお控えください。</p>
+      <p class="small">このページは単一HTMLで作成。レスポンシブ対応・軽量CSS・モバイルメニュー・アクセシビリティ（aria属性）に配慮しています。</p>
+    </div>
+    <div>
+      <a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a>
+    </div>
+  </div>
+</footer>
+
+<button id="topBtn" aria-label="ページ上部へ">▲</button>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // Close drawer on nav click (mobile)
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
+</body>
+</html>
