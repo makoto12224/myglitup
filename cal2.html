@@ -1,0 +1,402 @@
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="超初心者向けのGoogleカレンダー応用編。複数カレンダーを作って色分けする手順、共有のしかた、PCとスマホでの操作、使い分けのコツ、Q&Aまでをやさしい言葉で解説。シリーズ統一デザイン。"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=" rel="icon" />📅&quot;&gt;
+<style type="text/css">:root{
+      --bg:#0b0c0f; --card:#13151a; --ink:#e9edf1; --muted:#a8b0bb; --line:#22262e;
+      --brand:#63b3ff; --accent:#8de3b2; --warn:#ffd166; --ok:#78e08f; --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25); --radius:18px; --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb; --card:#ffffff; --ink:#111319; --muted:#5b6671; --line:#e8ecf2;
+        --brand:#2563eb; --accent:#0ea5e9; --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){ .grid.cols-3{grid-template-columns:1fr 1fr} }
+    @media (max-width:680px){ .grid.cols-2,.grid.cols-3{grid-template-columns:1fr} }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+</style>
+<header>
+<div class="container nav">
+<div class="brand"><span class="brand-badge">GC</span> <span><span style="font-size:28px;">Googleカレンダー応用編｜複数カレンダーを色分け＆共有する</span></span></div>
+<br />
+<button aria-expanded="false" aria-label="メニューを開く" class="hamburger" id="hamburger">☰</button></div>
+
+<div aria-hidden="true" class="drawer" id="drawer"><a href="#toc">目次</a> <a href="#sec0">はじめに：色分けの良さ</a> <a href="#sec1">カレンダーを新しく作る</a> <a href="#sec2">色を変える方法</a> <a href="#sec3">使い分けのコツ</a> <a href="#sec31">共有する（家族・スタッフ）</a> <a href="#sec4">よくある質問</a> <a href="#sec5">まとめ</a> <a href="#contact">メール/LINE相談</a></div>
+</header>
+
+<main>
+<section class="hero">
+<div class="container">
+<h1>複数カレンダーを作って、色で分けて、みんなで共有<br />
+<small style="font-weight:500;color:var(--muted)">超初心者向け｜PCとスマホのやり方をていねいに</small></h1>
+
+<p>予定が増えても、色分けと共有でスッキリ。仕事・家族・趣味などを分けて、必要なら家族やスタッフと一緒に使いましょう。</p>
+
+<div class="cta"><a class="btn primary" href="https://calendar.google.com" rel="noopener" target="_blank">Googleカレンダーを開く</a> <a class="btn" href="#sec1">新しいカレンダーを作る</a> <a class="btn" href="#sec31">共有のやり方をみる</a></div>
+
+<div class="kpis">
+<div class="card">
+<div class="num">色分け</div>
+
+<div class="small">ひと目で用途が分かる</div>
+</div>
+
+<div class="card">
+<div class="num">重なり把握</div>
+
+<div class="small">優先度が見やすい</div>
+</div>
+
+<div class="card">
+<div class="num">共有</div>
+
+<div class="small">家族・スタッフと連携</div>
+</div>
+
+<div class="card">
+<div class="num">PC/スマホ</div>
+
+<div class="small">どちらでも操作OK</div>
+</div>
+</div>
+
+<div class="toc" id="toc" style="margin-top:20px"><a href="#sec0">0) はじめに：色分けのメリット</a> <a href="#sec1">1) カレンダーを新しく作る（PC/スマホ）</a> <a href="#sec2">2) 色を変える（PC/スマホ）</a> <a href="#sec3">3) 使い分けのコツ（色の例を追加）</a> <a href="#sec31">4) 共有する（家族・スタッフと一緒に使う）</a> <a href="#sec4">5) よくある質問（Q&amp;A強化版）</a> <a href="#sec5">6) まとめ：今日から色分け＆共有！</a> <a href="#contact">7) メールまたはLINEで無料相談</a></div>
+</div>
+</section>
+<!-- 0) はじめに -->
+
+<section id="sec0">
+<div class="container">
+<h2>0) はじめに：色分けのメリット</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<p class="lead">用途ごとに色を変えると、予定がとても見やすくなります。</p>
+
+<ul>
+	<li>仕事・プライベート・家族・健康などを色で区別</li>
+	<li>予定が重なっても、どれを優先するか判断しやすい</li>
+	<li>あとから見返したときも整理されていて安心</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>まずは開いてみる</h3>
+
+<p>下のボタンから、別の画面でGoogleカレンダーを開きます。</p>
+
+<p><a class="btn" href="https://calendar.google.com" rel="noopener" target="_blank">Googleカレンダーを開く</a></p>
+
+<div class="tips"><strong>ログイン：</strong>右上に自分のアイコンが出ていればOKです。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 1) 新しく作る -->
+
+<section id="sec1">
+<div class="container">
+<h2>1) カレンダーを新しく作る（PC/スマホ）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>PCで作る</h3>
+
+<div class="code">① 下のボタンからカレンダーを開く ② 左側「その他のカレンダー」横の「＋」 ③ 「新しいカレンダーを作成」 ④ 名前（例：仕事／家族／趣味）を入れて「作成」</div>
+
+<p><a class="btn" href="https://calendar.google.com" rel="noopener" target="_blank">Googleカレンダーを開く</a></p>
+</div>
+
+<div class="card">
+<h3>スマホで作る（Android / iPhone）</h3>
+
+<div class="code">① Googleカレンダーアプリを開く ② 左上「三本線（メニュー）」 ③ 「新しいカレンダーを作成」 ④ 名前を入れて「作成」</div>
+
+<div class="tips"><strong>メモ：</strong>スマホとPCは同じアカウントで使うと、どちらでも同じ内容が見られます。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2) 色を変える -->
+
+<section id="sec2">
+<div class="container">
+<h2>2) 色を変える（PC/スマホ）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>PCで色を変える</h3>
+
+<div class="code">① 左の一覧で、色を変えたいカレンダーにカーソル ② 「︙（その他）」をクリック ③ 好きな色をクリック &rarr; 完了</div>
+</div>
+
+<div class="card">
+<h3>スマホで色を変える</h3>
+
+<div class="code">① アプリで「三本線（メニュー）」 ② 変えたいカレンダーの横の「●」をタップ ③ 色をえらんで完了</div>
+
+<div class="tips"><strong>反映しない時：</strong>アプリを一度閉じて開き直すと表示されることがあります。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3) 使い分けのコツ（色の例を拡充） -->
+
+<section id="sec3">
+<div class="container">
+<h2>3) 使い分けのコツ（色の例を追加）</h2>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>色の例（基本）</h3>
+
+<ul>
+	<li>仕事：青</li>
+	<li>家族：オレンジ</li>
+	<li>趣味・学び：緑</li>
+	<li>健康（病院・運動）：赤</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>色の例（細かく分けたい人）</h3>
+
+<ul>
+	<li>お金の用事（支払い・請求）：紫</li>
+	<li>移動（出張・送迎）：水色</li>
+	<li>締切（レポート・申請）：ピンク</li>
+	<li>休み・オフ：黄</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>運用のコツ</h3>
+
+<ul>
+	<li>予定を入れる時に「どのカレンダーか」を毎回えらぶ</li>
+	<li>色はあとで変えてOK（運用しながら整える）</li>
+	<li>通知（アラーム）を使って忘れ防止</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- 3.1) 共有する -->
+
+<section id="sec31">
+<div class="container">
+<h2>4) 共有する（家族・スタッフと一緒に使う）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>PCで共有する</h3>
+
+<div class="code">① 左の一覧で、共有したいカレンダーを探す ② カレンダー名の「︙（その他）」&rarr;「設定と共有」 ③ 「特定のユーザーとの共有」で「＋ 追加」 ④ 相手のメールアドレスを入れる ⑤ 権限をえらぶ（表示のみ／予定の変更可 など） ⑥ 「送信」をクリック</div>
+
+<div class="tips"><strong>権限の例：</strong>はじめは「予定の表示のみ」からが安心。慣れたら「変更可」に。</div>
+</div>
+
+<div class="card">
+<h3>スマホで共有する</h3>
+
+<div class="code">① アプリで「三本線（メニュー）」 ② 共有したいカレンダーの「⚙（設定）」を開く ③ 「共有」または「ユーザーを追加」 ④ 相手のメールアドレスを入れる ⑤ 権限をえらんで保存</div>
+
+<div class="warn"><strong>注意：</strong>相手もGoogleアカウントが必要です。同じ時間帯に使う場合は、通知設定が多すぎないように。</div>
+</div>
+</div>
+
+<div class="card">
+<h3>共有の小ワザ</h3>
+
+<ul>
+	<li><b>家族の予定だけを共有：</b>家族用カレンダーを作って、それだけ共有する（仕事用は共有しない）</li>
+	<li><b>シフト管理：</b>スタッフ用カレンダーを作成。色を人ごとに決めるとわかりやすい</li>
+	<li><b>共有の色：</b>色は各自の画面で自由に設定OK（人によって見え方が違っても問題なし）</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- 4) Q&A 強化版 -->
+
+<section id="sec4">
+<div class="container">
+<h2>5) よくある質問（Q&amp;A強化版）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>色が反映されない</h3>
+
+<ul>
+	<li>スマホはアプリを再起動、PCはページを更新</li>
+	<li>同じGoogleアカウントで見ているか確認</li>
+	<li>通信が不安定なときは、少し待ってから再表示</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>家族と色が違う</h3>
+
+<p>色は各自の画面の設定です。あなたと相手で違っても大丈夫。自分の見やすい色でOKです。</p>
+</div>
+
+<div class="card">
+<h3>共有したのに相手に見えない</h3>
+
+<ul>
+	<li>相手が招待メールの「追加」を押しているか確認</li>
+	<li>相手のカレンダーアプリで、そのカレンダーが表示ONになっているか確認</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>勝手に予定を変更されたくない</h3>
+
+<p>共有の権限を「表示のみ」にします。あとから「編集可」に変えることもできます。</p>
+</div>
+
+<div class="card">
+<h3>通知が多くてうるさい</h3>
+
+<ul>
+	<li>カレンダーごとの通知を減らす／オフにする</li>
+	<li>重要な予定だけ「個別の通知」を設定する</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>スマホとPCで予定が違う</h3>
+
+<ul>
+	<li>同じアカウントでログインしているか確認</li>
+	<li>スマホ側は「同期」をオンにする（設定内）</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- 5) まとめ -->
+
+<section id="sec5">
+<div class="container">
+<h2>6) まとめ：今日から色分け＆共有！</h2>
+
+<div class="card">
+<div class="code">① 新しいカレンダーを作る（用途ごと） ② 色を決める（青＝仕事、オレンジ＝家族 など） ③ 予定を入れる時に「どのカレンダーか」を選ぶ ④ 必要なら家族・スタッフと共有（権限は慎重に） ⑤ 通知で忘れを防ぐ。色は運用しながら調整</div>
+
+<div class="tips"><strong>次の一歩：</strong>繰り返し予定・タスク連携・オンライン会議URLの自動発行も便利です。</div>
+</div>
+
+<p><a class="btn" href="https://calendar.google.com" rel="noopener" target="_blank">Googleカレンダーを開く</a></p>
+</div>
+</section>
+<!-- 相談 -->
+
+<section id="contact">
+<div class="container">
+<h2>メールまたはLINEで無料相談</h2>
+
+<p class="lead">「この画面で止まりました」など、一言そえて送ってください。状況に合わせて手順でお返事します。</p>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>📧 メールで相談</h3>
+
+<p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+</div>
+
+<div class="card">
+<h3>💬 LINEで相談</h3>
+
+<p><a href="https://line.me/R/ti/p/@700zjftd" rel="noopener" target="_blank">LINEで無料相談する</a></p>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footgrid">
+<div>
+<p class="small">&copy; サロサポ・ジギョサポデジタル教室｜Googleカレンダー応用編（超初心者向け）。内容の無断転載はご遠慮ください。</p>
+
+<p class="small">このページは単一HTMLで作成。レスポンシブ対応・軽量CSS・モバイルメニュー・アクセシビリティ（aria属性）に配慮しています。</p>
+</div>
+
+<div><a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a></div>
+</div>
+</footer>
+<button aria-label="ページ上部へ" id="topBtn">▲</button><script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
