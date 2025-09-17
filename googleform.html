@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Googleフォームで予約受付｜超初心者向けかんたんガイド</title>
+  <meta name="description" content="Googleフォームで無料の予約受付をはじめる手順。アカウント準備からフォーム作成、配布、管理、ちょっと便利な応用までをやさしい言葉で解説。シリーズ統一デザイン。">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗓️</text></svg>">
+  <style>
+    :root{
+      --bg:#0b0c0f;
+      --card:#13151a;
+      --ink:#e9edf1;
+      --muted:#a8b0bb;
+      --line:#22262e;
+      --brand:#63b3ff;
+      --accent:#8de3b2;
+      --warn:#ffd166;
+      --ok:#78e08f;
+      --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25);
+      --radius:18px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --ink:#111319;
+        --muted:#5b6671;
+        --line:#e8ecf2;
+        --brand:#2563eb;
+        --accent:#0ea5e9;
+        --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <div class="brand">
+      <span class="brand-badge">GF</span>
+      <span>Googleフォームで予約受付｜超初心者ガイド</span>
+    </div>
+    <nav class="menu" aria-label="主要メニュー">
+      <a href="#toc">目次</a>
+      <a href="#sec0">メリット</a>
+      <a href="#sec1">アカウント</a>
+      <a href="#sec2">フォームを開く</a>
+      <a href="#sec3">作り方</a>
+      <a href="#sec4">管理</a>
+      <a href="#sec5">配布</a>
+      <a href="#sec6">応用</a>
+      <a href="#contact">相談</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">☰</button>
+  </div>
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <a href="#toc">目次</a>
+    <a href="#sec0">1) はじめに（メリット）</a>
+    <a href="#sec1">2) Googleアカウントを用意</a>
+    <a href="#sec2">3) Googleフォームを開く</a>
+    <a href="#sec3">4) 予約フォームの作り方</a>
+    <a href="#sec4">5) 回答の管理（表で見る）</a>
+    <a href="#sec5">6) お客様に見せる（配布）</a>
+    <a href="#sec6">7) ちょっと便利な応用</a>
+    <a href="#contact">メール/LINE相談</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1>無料ではじめる「予約受付」<br><small style="font-weight:500;color:var(--muted)">Googleフォームなら、リンク1つで予約が集まる</small></h1>
+      <p>アカウント準備 → フォーム作成 → 配布 → 管理 → 応用まで。むずかしい言葉は使いません。</p>
+      <div class="cta">
+        <a class="btn primary" href="#sec3">今すぐ作り方を見る</a>
+        <a class="btn" href="#sec5">配布のコツを知る</a>
+      </div>
+      <div class="kpis">
+        <div class="card"><div class="num">¥0</div><div class="small">無料で使える</div></div>
+        <div class="card"><div class="num">スマホOK</div><div class="small">お客様も簡単</div></div>
+        <div class="card"><div class="num">自動で表</div><div class="small">一覧で確認</div></div>
+        <div class="card"><div class="num">QR配布</div><div class="small">店頭にも貼れる</div></div>
+      </div>
+
+      <div id="toc" class="toc" style="margin-top:20px">
+        <a href="#sec0">1) はじめに：メリット</a>
+        <a href="#sec1">2) Googleアカウントを用意する</a>
+        <a href="#sec2">3) Googleフォームを開く</a>
+        <a href="#sec3">4) 予約フォームの作り方（基本）</a>
+        <a href="#sec4">5) 回答をスプレッドシートで管理</a>
+        <a href="#sec5">6) お客様に見せる（リンク・QR）</a>
+        <a href="#sec6">7) ちょっと便利な応用</a>
+        <a href="#contact">8) メールまたはLINEで無料相談</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 0) メリット -->
+  <section id="sec0">
+    <div class="container">
+      <h2>1) はじめに：Googleフォームを使うメリット</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <ul>
+            <li>無料で、ずっと使えます</li>
+            <li>スマホ・パソコン、どちらでも動きます</li>
+            <li>答えは自動で「表（スプレッドシート）」にまとまります</li>
+            <li>リンクやQRで、かんたんに配れます</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tips"><strong>ゴール：</strong>「名前・電話・希望日・時間」を集めて、表で見られる状態にします。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1) アカウント -->
+  <section id="sec1">
+    <div class="container">
+      <h2>2) Googleアカウントを用意する</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <p class="lead">Googleフォームを使うには、Googleアカウント（Gmail）が必要です。</p>
+          <ul>
+            <li>まだ持っていない → <a href="https://accounts.google.com/signup?hl=ja" target="_blank" rel="noopener">Gmail新規登録を開く</a></li>
+            <li>すでにGmailを持っている → そのまま使えます</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="warn"><strong>メモ：</strong>パスワードは紙やメモ帳に控えておきましょう。忘れたときに安心です。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2) フォームを開く -->
+  <section id="sec2">
+    <div class="container">
+      <h2>3) Googleフォームを開く</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <p><a href="https://forms.google.com" target="_blank" rel="noopener">Googleフォームを開く</a> → 「空白（新しいフォーム）」を選びます。</p>
+          <ul>
+            <li>タイトルに「予約フォーム」と入れます</li>
+            <li>説明文に「予約に必要なことを書いてください」など、ひとこと入れます</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tips"><strong>ポイント：</strong>あとで迷わないように、タイトルはシンプルに。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3) 作り方 -->
+  <section id="sec3">
+    <div class="container">
+      <h2>4) 予約フォームの作り方（基本）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <span class="tag">入れる項目の例</span>
+          <div class="code">① お名前（短いテキスト）
+② 電話番号（短いテキスト）
+③ 希望日（回答の種類：日付）
+④ 希望時間（回答の種類：時刻）
+⑤ ご希望メニュー（必要なら選択式）</div>
+          <ul>
+            <li>「＋」ボタンで項目を足せます</li>
+            <li>必ず答えてほしい項目は「必須」をON</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag">よくあるつまずき</span>
+          <ul>
+            <li>電話番号は「短いテキスト」でOK（数字だけにすると固定電話で困ることあり）</li>
+            <li>日付・時間は、必ず「日付」「時刻」に設定する</li>
+            <li>一度テスト送信して、見え方を確認しましょう</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4) 管理 -->
+  <section id="sec4">
+    <div class="container">
+      <h2>5) 回答をスプレッドシートで管理</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <p>フォーム上部の「回答」タブ → 「スプレッドシートで見る」を押します。</p>
+          <ul>
+            <li>自動で一覧表ができます</li>
+            <li>新しい予約が来ると、表にも自動で追加されます</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tips"><strong>小ワザ：</strong>表の左端に「確認済み」列を足して、チェックマーク（✔）を入れると管理が楽です。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5) 配布 -->
+  <section id="sec5">
+    <div class="container">
+      <h2>6) お客様に見せる（リンク・QR）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <span class="tag">リンクで送る</span>
+          <ol>
+            <li>フォーム右上の「送信」を押す</li>
+            <li>「リンク」アイコンを押す</li>
+            <li>表示されたURLをコピー → LINEやメールに貼る</li>
+          </ol>
+        </div>
+        <div class="card">
+          <span class="tag">QRコードで見せる</span>
+          <ul>
+            <li>URLをQRコードに変えるサービスを使います（店頭・チラシに便利）</li>
+            <li>印刷の前に、スマホで読み取りテストをしましょう</li>
+          </ul>
+          <div class="warn"><strong>注意：</strong>URLが変わったら、QRも作り直しが必要です。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6) 応用 -->
+  <section id="sec6">
+    <div class="container">
+      <h2>7) ちょっと便利な応用</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>人数の調整</h3>
+          <p>時間帯を「選択式」にしておき、満席になったらその選択肢を消します。</p>
+        </div>
+        <div class="card">
+          <h3>確認メッセージ</h3>
+          <p>送信後の画面に「ありがとうございます。こちらからご連絡します。」など、ひとこと入れておくと安心です。</p>
+        </div>
+        <div class="card">
+          <h3>自動メール（上級）</h3>
+          <p>アドオンを使うと、自動返信メールもできます。慣れてきたらチャレンジしましょう。</p>
+        </div>
+      </div>
+      <div class="tips" style="margin-top:10px"><strong>まずはシンプルに：</strong>最初は「基本の4項目」だけで十分。慣れたら少しずつ足しましょう。</div>
+    </div>
+  </section>
+
+  <!-- 相談 -->
+  <section id="contact">
+    <div class="container">
+      <h2>メールまたはLINEで無料相談</h2>
+      <p class="lead">「作ってみたけど不安」「うまく送れない」など、気軽にご連絡ください。</p>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>📧 メールで相談</h3>
+          <p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+        </div>
+        <div class="card">
+          <h3>💬 LINEで相談</h3>
+          <p><a href="https://line.me/R/ti/p/@700zjftd" target="_blank" rel="noopener">LINEで無料相談する</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footgrid">
+    <div>
+      <p class="small">© サロサポ・ジギョサポデジタル教室｜Googleフォームで予約受付。無断転載はご遠慮ください。</p>
+      <p class="small">このページは単一HTMLで作成。レスポンシブ対応・軽量CSS・モバイルメニュー・アクセシビリティ（aria属性）に配慮しています。</p>
+    </div>
+    <div>
+      <a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a>
+    </div>
+  </div>
+</footer>
+
+<button id="topBtn" aria-label="ページ上部へ">▲</button>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // Close drawer on nav click (mobile)
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
+</body>
+</html>
