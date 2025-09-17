@@ -1,0 +1,486 @@
+<br />
+<style type="text/css">:root{
+      --bg:#0b0c0f;
+      --card:#13151a;
+      --ink:#e9edf1;
+      --muted:#a8b0bb;
+      --line:#22262e;
+      --brand:#63b3ff;
+      --accent:#8de3b2;
+      --warn:#ffd166;
+      --ok:#78e08f;
+      --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25);
+      --radius:18px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --ink:#111319;
+        --muted:#5b6671;
+        --line:#e8ecf2;
+        --brand:#2563eb;
+        --accent:#0ea5e9;
+        --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+</style>
+<header>
+<div class="container nav">
+<div class="brand"><span class="brand-badge">AI</span> <span><span style="font-size:26px;">AI検索時代の集客戦略｜事業者向け完全版</span></span></div>
+<br />
+<button aria-expanded="false" aria-label="メニューを開く" class="hamburger" id="hamburger">☰</button></div>
+
+<div aria-hidden="true" class="drawer" id="drawer"><a href="#toc">目次</a> <a href="#sec0">1) 序章：静かな検索革命</a> <a href="#sec1">2) 具体例：業種別の変化</a> <a href="#sec2">3) リスク：4つの痛点</a> <a href="#sec3">4) 対策：5つの実務</a> <a href="#sec4">5) 実践チェック</a> <a href="#sec5">6) 90日アクション</a> <a href="#sec6">7) 未来予測</a> <a href="#sec7">8) まとめ</a> <a href="#contact">メール/LINE相談</a></div>
+</header>
+
+<main>
+<section class="hero">
+<div class="container">
+<h1>「待つ＝負け、動く＝選ばれる」<br />
+<small style="font-weight:500;color:var(--muted)">AI検索時代に、生き残るための警鐘と実務ロードマップ</small></h1>
+
+<p>GoogleのAIモードで、検索のルールが一変。もう「青いリンクに並ぶ」だけでは集客できません。<br />
+この資料は、脅威の正体と、今日から90日でやるべき実務をまとめています。</p>
+
+<div class="cta"><a class="btn" href="#sec3">すぐできる対策を見る</a> <a class="btn primary" href="#sec5">90日アクションへ進む</a></div>
+
+<div class="kpis">
+<div class="card">
+<div class="num">要約席取り</div>
+
+<div class="small">AI回答に乗るかが生命線</div>
+</div>
+
+<div class="card">
+<div class="num">差別化</div>
+
+<div class="small">&ldquo;その他大勢&rdquo;から脱出</div>
+</div>
+
+<div class="card">
+<div class="num">口コミ設計</div>
+
+<div class="small">新しいSEOの軸</div>
+</div>
+
+<div class="card">
+<div class="num">90日運用</div>
+
+<div class="small">週次で積む改善</div>
+</div>
+</div>
+
+<div class="toc" id="toc" style="margin-top:20px"><a href="#sec0">1) 序章：静かな&ldquo;検索革命&rdquo;の到来</a> <a href="#sec1">2) 具体例：業種別に見る消費者行動の変化</a> <a href="#sec2">3) リスク：経営に直撃する4つの痛点</a> <a href="#sec3">4) 対策：生き残るための5つの実務行動</a> <a href="#sec4">5) 実践チェックリスト（業種別サンプル）</a> <a href="#sec5">6) 90日アクションプラン（週次）</a> <a href="#sec6">7) 未来予測：検索以外への波及</a> <a href="#sec7">8) まとめ：待つ＝負け、動く＝選ばれる</a> <a href="#contact">9) メールまたはLINEで無料相談</a></div>
+</div>
+</section>
+<!-- 1) 序章 -->
+
+<section id="sec0">
+<div class="container">
+<h2>1) 序章：静かな&ldquo;検索革命&rdquo;の到来</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<p class="lead">AIモードで、検索は「要約が最初」に出る形へ。</p>
+
+<ul>
+	<li>従来：10件のリンクを比較 &rarr; クリックして読む</li>
+	<li>現在：自然文で質問 &rarr; AIが複数サイトを要約 &rarr; 最上部に回答</li>
+	<li><b>結果：</b>SEOや広告だけでは不十分。「AI回答に含まれるか」が勝負</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>何が変わるのか</h3>
+
+<ul>
+	<li>クリック率の低下（要約で満足される）</li>
+	<li>比較の自動化（競合が横並びに）</li>
+	<li>曖昧な情報は除外（AIが拾えない）</li>
+</ul>
+
+<div class="warn"><strong>警鐘：</strong>AI回答に採用されなければ「実質、存在しない」のと同じ。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2) 具体例 -->
+
+<section id="sec1">
+<div class="container">
+<h2>2) 具体例：業種別に見る消費者行動の変化</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>飲食</h3>
+
+<div class="code">従来：「博多 ラーメン 深夜」<br />
+AIモード：「博多で深夜2時以降営業、駐車場あり、子連れ歓迎のラーメン店を教えて」</div>
+
+<div class="tips"><strong>要点：</strong>条件を丸投げ。リンクを1件ずつ開かない。</div>
+</div>
+
+<div class="card">
+<h3>宿泊</h3>
+
+<div class="code">従来：「京都 紅葉 ホテル」<br />
+AIモード：「11月の紅葉時期に家族4人で泊まりやすく、子ども料金込みで比較できるホテル」</div>
+</div>
+
+<div class="card">
+<h3>美容サロン</h3>
+
+<div class="code">従来：「天神 美容室 メンズカット」<br />
+AIモード：「福岡天神でメンズカットが得意、初回割引あり、口コミ高評価の美容室をリストで」</div>
+</div>
+
+<div class="card">
+<h3>不動産</h3>
+
+<div class="code">従来：「久留米 賃貸 2LDK」<br />
+AIモード：「久留米駅徒歩15分以内、家賃8万円以下・ペット可・駐車場ありの2LDKを一覧で」</div>
+</div>
+</div>
+
+<div class="warn" style="margin-top:10px"><strong>結論：</strong>AIの候補に出ない＝検討されない。</div>
+</div>
+</section>
+<!-- 3) リスク -->
+
+<section id="sec2">
+<div class="container">
+<h2>3) リスク：経営に直撃する4つの痛点</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>1. クリックされない</h3>
+
+<p>AI要約で満足され、ページに来ない。1位でも流入が減る。</p>
+</div>
+
+<div class="card">
+<h3>2. 比較に埋もれる</h3>
+
+<p>「おすすめ」「比較」で競合が自動で横並び。差別化が弱いとその他大勢に。</p>
+</div>
+
+<div class="card">
+<h3>3. 情報不足で除外</h3>
+
+<p>営業時間・料金・特徴が曖昧だとAIに拾われず、候補から外れる。</p>
+</div>
+
+<div class="card">
+<h3>4. 口コミが命取り</h3>
+
+<p>レビュー数が少ない／評価が低いとAIは不利に計算。<b>口コミは新しいSEO。</b></p>
+</div>
+</div>
+</div>
+</section>
+<!-- 4) 対策 -->
+
+<section id="sec3">
+<div class="container">
+<h2>4) 対策：生き残るための5つの実務行動</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>① 公式情報（GBP）を徹底整備</h3>
+
+<ul>
+	<li>営業時間・料金・住所・写真を最新化</li>
+	<li>メニューやサービスは<b>箇条書き・表形式</b>で</li>
+	<li>季節・期間の情報も明記</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>② FAQ整備（自然文対応）</h3>
+
+<p>「◯◯は可能ですか？」&rarr;「はい、可能です」の形式で最低10項目。</p>
+
+<ul>
+	<li>キーワードではなく<b>Q&amp;A文</b>を作る</li>
+	<li>予約方法・支払い・駐車場・対応範囲など</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>③ 差別化の言語化（USP）</h3>
+
+<div class="code">例：専門性／特典／保証／実績 を3行で</div>
+
+<p>AIが比較する際に、強みが抜き出されやすくなる。</p>
+</div>
+
+<div class="card">
+<h3>④ 口コミ育成</h3>
+
+<ul>
+	<li>満足顧客へレビュー依頼（QR／URL）</li>
+	<li>悪評には即返信し、改善姿勢を提示</li>
+	<li>最新レビューが常に増える仕組み</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>⑤ 比較前提の情報設計</h3>
+
+<div class="code">料金｜所要時間｜対象｜特徴｜注意点</div>
+
+<p>表形式で「選ばれる理由」を明確に。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 5) 実践チェック -->
+
+<section id="sec4">
+<div class="container">
+<h2>5) 実践チェックリスト（業種別サンプル）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>飲食</h3>
+
+<ul>
+	<li>深夜・駐車場・子連れ可を明記</li>
+	<li>アレルゲン情報・人気メニューを表で</li>
+	<li>FAQ：「深夜営業は？」「席予約は？」</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>美容サロン</h3>
+
+<ul>
+	<li>得意分野と初回特典を3行で</li>
+	<li>メニュー料金表・所要時間を明示</li>
+	<li>FAQ：「メンズ可？」「当日予約OK？」</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>不動産</h3>
+
+<ul>
+	<li>条件タグ（駅距離/賃料/ペット/駐車場）</li>
+	<li>初期費用・フリーレントの表</li>
+	<li>FAQ：「ペット可？」「初期費用の内訳？」</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>士業</h3>
+
+<ul>
+	<li>対応分野と料金目安を表に</li>
+	<li>事例・実績を短文で</li>
+	<li>FAQ：「初回相談無料？」「対応地域は？」</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- 6) 90日 -->
+
+<section id="sec5">
+<div class="container">
+<h2>6) 90日アクションプラン（週次）</h2>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>Day 1&ndash;30（基盤整備）</h3>
+
+<ul>
+	<li>GBP最新化（写真・料金・営業時間）</li>
+	<li>FAQ 10件作成・公開</li>
+	<li>レビュー依頼導線の設置</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Day 31&ndash;60（差別化強化）</h3>
+
+<ul>
+	<li>強み3行（USP）を明文化</li>
+	<li>料金・サービス表を作成</li>
+	<li>ネガ対応マニュアル整備</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Day 61&ndash;90（拡張・安定化）</h3>
+
+<ul>
+	<li>追加FAQ 10件</li>
+	<li>事例・実績ページ公開</li>
+	<li>月次の見直しサイクル化</li>
+</ul>
+</div>
+</div>
+
+<div class="tips"><strong>ポイント：</strong>毎週「1テーマだけ」集中改善すると続きます。</div>
+</div>
+</section>
+<!-- 7) 未来予測 -->
+
+<section id="sec6">
+<div class="container">
+<h2>7) 未来予測：検索以外への波及</h2>
+
+<div class="grid cols-3">
+<div class="card">
+<h3>Googleマップ</h3>
+
+<p>飲食・美容・病院など、地図内の検索もAI要約に。写真と最新情報が重要度アップ。</p>
+</div>
+
+<div class="card">
+<h3>ショッピング</h3>
+
+<p>価格・レビュー・在庫の自動比較。商品ページの仕様表が必須に。</p>
+</div>
+
+<div class="card">
+<h3>YouTube</h3>
+
+<p>動画の要点をAIが冒頭で要約。タイトルとチャプター設計が露出を左右。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 8) まとめ -->
+
+<section id="sec7">
+<div class="container">
+<h2>8) まとめ：待つ＝負け、動く＝選ばれる</h2>
+
+<div class="card">
+<div class="code">・AI回答に採用される情報設計へ ・FAQは自然文で、最低10&rarr;20件へ ・口コミを増やし、悪評には即返信 ・「料金・時間・特徴」を表で見える化 ・90日で基盤&rarr;差別化&rarr;安定運用</div>
+
+<div class="warn"><strong>最後に：</strong>今日の一歩が1年後の集客を決めます。</div>
+</div>
+</div>
+</section>
+<!-- 9) 相談 -->
+
+<section id="contact">
+<div class="container">
+<h2>メールまたはLINEで無料相談</h2>
+
+<p class="lead">「ここが分からない」「手を動かしてほしい」など、お気軽にご連絡ください。</p>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>📧 メールで相談</h3>
+
+<p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+</div>
+
+<div class="card">
+<h3>💬 LINEで相談</h3>
+
+<p><a href="https://line.me/R/ti/p/@700zjftd" rel="noopener" target="_blank">LINEで無料相談する</a></p>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footgrid">
+<div>
+<p class="small">&copy; サロサポ・ジギョサポデジタル教室｜AI検索時代の集客戦略（事業者向け完全版）。無断転載はご遠慮ください。</p>
+
+<p class="small">単一HTML・レスポンシブ対応・軽量CSS・アクセシビリティ（aria属性）配慮。</p>
+</div>
+
+<div><a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a></div>
+</div>
+</footer>
+<button aria-label="ページ上部へ" id="topBtn">▲</button><script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // Close drawer on nav click (mobile)
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
