@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Googleカレンダーの共有｜超初心者向けガイド（シリーズ統一デザイン）</title>
+  <meta name="description" content="Googleカレンダーの共有をやさしい言葉で解説。家族・スタッフと予定を見える化、パソコン/スマホのやり方、権限の注意点、活用シーンまで。専門用語にはGoogle検索リンク（AIモード対応）。">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗓️</text></svg>">
+  <style>
+    :root{
+      --bg:#0b0c0f;
+      --card:#13151a;
+      --ink:#e9edf1;
+      --muted:#a8b0bb;
+      --line:#22262e;
+      --brand:#63b3ff;
+      --accent:#8de3b2;
+      --warn:#ffd166;
+      --ok:#78e08f;
+      --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25);
+      --radius:18px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --ink:#111319;
+        --muted:#5b6671;
+        --line:#e8ecf2;
+        --brand:#2563eb;
+        --accent:#0ea5e9;
+        --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <div class="brand">
+      <span class="brand-badge">GC</span>
+      <span>Googleカレンダーの共有｜超初心者ガイド</span>
+    </div>
+    <nav class="menu" aria-label="主要メニュー">
+      <a href="#toc">目次</a>
+      <a href="#sec0">便利さ</a>
+      <a href="#sec1">仕組み</a>
+      <a href="#sec2">PCで共有</a>
+      <a href="#sec3">スマホで共有</a>
+      <a href="#sec4">注意点</a>
+      <a href="#sec5">活用例</a>
+      <a href="#contact">相談</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">☰</button>
+  </div>
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <a href="#toc">目次</a>
+    <a href="#sec0">1) 共有の便利さ</a>
+    <a href="#sec1">2) 共有の仕組み</a>
+    <a href="#sec2">3) パソコンで共有</a>
+    <a href="#sec3">4) スマホで共有</a>
+    <a href="#sec4">5) 注意点</a>
+    <a href="#sec5">6) 活用例</a>
+    <a href="#contact">メール/LINE相談</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1>予定をみんなで見える化<br><small style="font-weight:500;color:var(--muted)">家族・スタッフと予定がそろう。スマホもPCもOK。</small></h1>
+      <p>このページは、<a href="https://www.google.com/search?q=%E3%80%8CGoogle%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC%E3%80%8D%E3%81%A8%E3%81%AF" target="_blank" rel="noopener">Googleカレンダー</a>の「<a href="https://www.google.com/search?q=%E3%82%B7%E3%82%A7%E3%82%A2%E3%81%A8%E3%81%AF" target="_blank" rel="noopener">共有</a>」を、むずかしい言葉を使わずに説明します。</p>
+      <div class="cta">
+        <a class="btn primary" href="#sec2">まずはやり方を見る</a>
+        <a class="btn" href="#sec4">注意点だけ確認</a>
+      </div>
+      <div class="kpis">
+        <div class="card"><div class="num">見える化</div><div class="small">予定の抜け漏れ↓</div></div>
+        <div class="card"><div class="num">スマホOK</div><div class="small">家でも外でも</div></div>
+        <div class="card"><div class="num">無料</div><div class="small">すぐ始められる</div></div>
+        <div class="card"><div class="num">権限</div><div class="small"><a href="https://www.google.com/search?q=%E6%A8%A9%E9%99%90+%E3%81%A8%E3%81%AF" target="_blank" rel="noopener">表示のみ/編集可</a></div></div>
+      </div>
+
+      <div id="toc" class="toc" style="margin-top:20px">
+        <a href="#sec0">1) 共有の便利さ</a>
+        <a href="#sec1">2) 共有の基本の仕組み</a>
+        <a href="#sec2">3) 家族・スタッフと共有（パソコン）</a>
+        <a href="#sec3">4) スマホから共有（iPhone/Android）</a>
+        <a href="#sec4">5) 共有の注意点</a>
+        <a href="#sec5">6) 活用シーン例</a>
+        <a href="#contact">7) メールまたはLINEで無料相談</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 0) 共有の便利さ -->
+  <section id="sec0">
+    <div class="container">
+      <h2>1) 共有の便利さ</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <ul>
+            <li>家族・仲間・スタッフと、同じ予定を見られる</li>
+            <li>ダブルブッキングを防げる</li>
+            <li>スマホでもパソコンでも、いつでも最新</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tips"><strong>例：</strong>家族の予定、スタッフのシフト、チームの会議などを1つのカレンダーに。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1) 仕組み -->
+  <section id="sec1">
+    <div class="container">
+      <h2>2) 共有の基本の仕組み</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <p><a href="https://www.google.com/search?q=%E3%82%AF%E3%83%A9%E3%82%A6%E3%83%89+%E3%81%A8%E3%81%AF" target="_blank" rel="noopener">クラウド</a>上に予定が保管されています。だから、相手のメールアドレスを招待すると相手にも同じ予定が表示されます。</p>
+          <p>共有には「見せ方」と「<a href="https://www.google.com/search?q=%E6%A8%A9%E9%99%90+%E3%81%A8%E3%81%AF" target="_blank" rel="noopener">権限</a>」を選びます。</p>
+        </div>
+        <div class="card">
+          <ul>
+            <li><b>表示のみ：</b>相手は見るだけ</li>
+            <li><b>編集可：</b>相手も予定を追加・変更できる</li>
+          </ul>
+          <div class="warn"><strong>注意：</strong>編集可にすると、相手が誤って予定を消す可能性があります。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2) PCで共有 -->
+  <section id="sec2">
+    <div class="container">
+      <h2>3) 家族・スタッフと共有（パソコン）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <ol>
+            <li><a href="https://calendar.google.com" target="_blank" rel="noopener">Googleカレンダーを開く</a></li>
+            <li>左の「マイカレンダー」から共有したいカレンダーの「︙」→「設定と共有」</li>
+            <li>「特定のユーザーと共有」→ 相手のGmailを入力</li>
+            <li>「権限」を選んで「送信」</li>
+          </ol>
+          <div class="tips"><strong>ヒント：</strong>仕事用・家族用など、カレンダーを分けて色分けすると見やすいです。</div>
+        </div>
+        <div class="card">
+          <span class="tag">よくあるつまずき</span>
+          <ul>
+            <li>相手が見えない → 相手が「招待メールの承認」をしていない可能性</li>
+            <li>予定が多くて見づらい → 不要なカレンダーのチェックを外す</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3) スマホで共有 -->
+  <section id="sec3">
+    <div class="container">
+      <h2>4) スマホから共有（iPhone/Android）</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <ol>
+            <li>Googleカレンダーのアプリを開く</li>
+            <li>左上「≡」→「設定」→ 共有したいカレンダーを選ぶ</li>
+            <li>「共有」→ 相手のGmailを入力 → 権限を選ぶ</li>
+          </ol>
+        </div>
+        <div class="card">
+          <div class="tips"><strong>ポイント：</strong>アプリの見た目はiPhone/Androidで少し違いますが、流れは同じです。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4) 注意点 -->
+  <section id="sec4">
+    <div class="container">
+      <h2>5) 共有のときの注意点</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <ul>
+            <li>編集権限は必要な人だけに</li>
+            <li>見せたくない予定は、自分だけのカレンダーに入れる</li>
+            <li>お店や会社で使うなら <a href="https://www.google.com/search?q=Google+Workspace+%E3%81%A8%E3%81%AF" target="_blank" rel="noopener">Google Workspace</a> も検討</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="warn"><strong>メモ：</strong>大勢に公開リンクを配ると情報が広がりすぎることがあります。相手を指定する共有が安全です。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5) 活用例 -->
+  <section id="sec5">
+    <div class="container">
+      <h2>6) 活用シーン例</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>家族</h3>
+          <p>学校行事・病院・旅行の予定を一つに。色分けでわかりやすく。</p>
+        </div>
+        <div class="card">
+          <h3>お店</h3>
+          <p>スタッフのシフトを共有。休みや交代が一目でわかる。</p>
+        </div>
+        <div class="card">
+          <h3>チーム</h3>
+          <p>会議・締切・担当を共有。ダブルブッキング防止に。</p>
+        </div>
+      </div>
+      <div class="tips" style="margin-top:10px">
+        <strong>まずは1つから：</strong>「家族」や「仕事」など、最初は1つの共有から始めて、慣れたら増やしましょう。
+      </div>
+    </div>
+  </section>
+
+  <!-- 相談 -->
+  <section id="contact">
+    <div class="container">
+      <h2>メールまたはLINEで無料相談</h2>
+      <p class="lead">「共有ができない」「権限がわからない」など、お気軽にご相談ください。</p>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>📧 メールで相談</h3>
+          <p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+        </div>
+        <div class="card">
+          <h3>💬 LINEで相談</h3>
+          <p><a href="https://line.me/R/ti/p/@700zjftd" target="_blank" rel="noopener">LINEで無料相談する</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footgrid">
+    <div>
+      <p class="small">© サロサポ・ジギョサポデジタル教室｜Googleカレンダーの共有。無断転載はご遠慮ください。</p>
+      <p class="small">このページは単一HTMLで作成。レスポンシブ対応・軽量CSS・モバイルメニュー・アクセシビリティ（aria属性）に配慮しています。</p>
+    </div>
+    <div>
+      <a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a>
+    </div>
+  </div>
+</footer>
+
+<button id="topBtn" aria-label="ページ上部へ">▲</button>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // Close drawer on nav click (mobile)
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
+</body>
+</html>
