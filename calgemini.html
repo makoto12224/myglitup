@@ -1,0 +1,356 @@
+<br />
+<style type="text/css">:root{
+      --bg:#0b0c0f;
+      --card:#13151a;
+      --ink:#e9edf1;
+      --muted:#a8b0bb;
+      --line:#22262e;
+      --brand:#63b3ff;
+      --accent:#8de3b2;
+      --warn:#ffd166;
+      --ok:#78e08f;
+      --danger:#ff7b7b;
+      --shadow:0 8px 24px rgba(0,0,0,.25);
+      --radius:18px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --ink:#111319;
+        --muted:#5b6671;
+        --line:#e8ecf2;
+        --brand:#2563eb;
+        --accent:#0ea5e9;
+        --shadow:0 8px 24px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(11,12,15,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ header{background:rgba(246,247,251,.75)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+    .brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-size:18px;box-shadow:var(--shadow)}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 10px;border-radius:10px}
+    .menu a:hover{background:var(--line);text-decoration:none}
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .menu{display:none}
+      .hamburger{display:block}
+      .drawer{position:fixed;inset:64px 0 auto 0;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow);display:none}
+      .drawer.open{display:block}
+      .drawer a{display:block;padding:14px 20px;border-bottom:1px solid var(--line)}
+    }
+    /* Hero */
+    .hero{padding:48px 0 26px;border-bottom:1px solid var(--line);background:
+      radial-gradient(1200px 500px at 20% -10%, rgba(99,179,255,.10), transparent 60%),
+      radial-gradient(1000px 400px at 100% -30%, rgba(141,227,178,.10), transparent 60%)}
+    .hero h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#0b0c0f;font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .kpis .card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+    .kpis .num{font-size:20px;font-weight:800}
+    @media (max-width:840px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
+    /* Section */
+    section{padding:36px 0;border-bottom:1px solid var(--line)}
+    h2{font-size:clamp(22px,3.2vw,32px);margin:0 0 14px}
+    h3{font-size:clamp(18px,2.4vw,22px);margin:22px 0 10px}
+    p.lead{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:960px){
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+    .card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .tips{border-left:4px solid var(--accent);padding:10px 14px;background:linear-gradient(90deg,rgba(141,227,178,.08),transparent)}
+    .warn{border-left:4px solid var(--warn);padding:10px 14px;background:linear-gradient(90deg,rgba(255,209,102,.12),transparent)}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.25);padding:8px 10px;border-radius:10px;display:block;white-space:pre-wrap}
+    .toc{display:grid;gap:10px;margin-top:14px}
+    .toc a{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+    .toc a:hover{background:linear-gradient(135deg,rgba(99,179,255,.12),rgba(141,227,178,.12))}
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted)}
+    .footgrid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+    @media (max-width:800px){ .footgrid{grid-template-columns:1fr} }
+    .small{font-size:12px;color:var(--muted)}
+    /* Back to top */
+    #topBtn{position:fixed;right:14px;bottom:14px;z-index:40;border:none;border-radius:999px;padding:12px 14px;background:var(--brand);color:#0b0c0f;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+</style>
+<header>
+<div class="container nav">
+<div class="brand"><span class="brand-badge">GAI</span> <span><span style="font-size:26px;">Googleカレンダー &times; Gemini｜実装ガイド</span></span></div>
+<br />
+<button aria-expanded="false" aria-label="メニューを開く" class="hamburger" id="hamburger">☰</button></div>
+
+<div aria-hidden="true" class="drawer" id="drawer">　　　　　　　　　<a href="#toc">目次</a> <a href="#sec0">0) 用意するもの</a> <a href="#sec1">1) まずはつなぐ</a> <a href="#sec2">2) 予定の作り方</a> <a href="#sec3">3) Gmail&rarr;予定</a> <a href="#sec4">4) 毎朝の予定まとめ</a> <a href="#sec5">5) 困った時</a> <a href="#contact">メール/LINE相談</a></div>
+</header>
+
+<main>
+<section class="hero">
+<div class="container">
+<h1>話しかけるだけで予定が入る<br />
+<small style="font-weight:500;color:var(--muted)">Googleカレンダー &times; <a href="https://www.google.com/search?q=Gemini%20%E3%81%A8%E3%81%AF" rel="noopener" target="_blank">Gemini</a>（AI）でスケジュール管理がラクに。</small></h1>
+
+<p>このページは、<a href="https://www.google.com/search?q=Google%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC%20%E3%81%A8%E3%81%AF" rel="noopener" target="_blank">Googleカレンダー</a>と<a href="https://www.google.com/search?q=Gemini%20%E3%81%A8%E3%81%AF" rel="noopener" target="_blank">Gemini</a>をつないで、予定の作成・調整・確認、<a href="https://www.google.com/search?q=Gmail%20%E4%BA%88%E5%AE%9A%20%E8%87%AA%E5%8B%95" rel="noopener" target="_blank">Gmailからの自動追加</a>、毎朝の要約までを「むずかしい言葉なし」で解説します。</p>
+
+<div class="cta"><a class="btn primary" href="#sec1">まずはつなぐ（1分）</a> <a class="btn" href="#sec2">予定の作り方を見る</a></div>
+
+<div class="kpis">
+<div class="card">
+<div class="num">入力いらず</div>
+
+<div class="small">声/文章でOK</div>
+</div>
+
+<div class="card">
+<div class="num">自動取り込み</div>
+
+<div class="small">Gmail&rarr;予定</div>
+</div>
+
+<div class="card">
+<div class="num">要約通知</div>
+
+<div class="small">毎朝の予定まとめ</div>
+</div>
+
+<div class="card">
+<div class="num">無料で開始</div>
+
+<div class="small">上位は<a href="https://www.google.com/search?q=Google%20AI%20Pro%20%E3%81%A8%E3%81%AF" rel="noopener" target="_blank">AI Pro</a>も</div>
+</div>
+</div>
+
+<div class="toc" id="toc" style="margin-top:20px"><a href="#sec0">0) 事前に用意するもの</a> <a href="#sec1">1) まずは「つなぐ」</a> <a href="#sec2">2) 予定作成の練習テンプレ</a> <a href="#sec3">3) Gmailから予定にする方法</a> <a href="#sec4">4) 毎朝の「予定まとめ」を自動化</a> <a href="#sec5">5) 困った時のチェックリスト</a> <a href="#contact">6) メールまたはLINEで無料相談</a></div>
+</div>
+</section>
+<!-- 0) 用意するもの -->
+
+<section id="sec0">
+<div class="container">
+<h2>0) 事前に用意するもの（かんたん）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<ul>
+	<li><a href="https://www.google.com/search?q=Google%E3%82%A2%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%20%E4%BD%9C%E6%88%90" rel="noopener" target="_blank">Googleアカウント</a>（無料）</li>
+	<li><a href="https://calendar.google.com" rel="noopener" target="_blank">Googleカレンダー</a>（PC/スマホ）</li>
+	<li><a href="https://www.google.com/search?q=Gemini%20%E3%82%A2%E3%83%97%E3%83%AA%20iPhone" rel="noopener" target="_blank">Geminiアプリ（iPhone）</a>／<a href="https://www.google.com/search?q=Gemini%20%E3%82%A2%E3%83%97%E3%83%AA%20Android" rel="noopener" target="_blank">Geminiアプリ（Android）</a>／<a href="https://www.google.com/search?q=gemini.google.com" rel="noopener" target="_blank">gemini.google.com</a>（PC）</li>
+</ul>
+
+<div class="tips"><strong>メモ：</strong>より高機能で使いたい人は<a href="https://www.google.com/search?q=Google%20AI%20Pro%20%E3%81%A8%E3%81%AF" rel="noopener" target="_blank">Google AI Pro</a>もあります（任意）。</div>
+</div>
+
+<div class="card"><span class="tag">スマホ推奨</span>
+
+<p>Geminiはスマホアプリだと「音声でお願い」できて便利。PCではブラウザから使えます。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 1) まずつなぐ -->
+
+<section id="sec1">
+<div class="container">
+<h2>1) まずは「Geminiとカレンダー」をつなぐ</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>PCの手順</h3>
+
+<ol>
+	<li><a href="https://www.google.com/search?q=gemini.google.com" rel="noopener" target="_blank">gemini.google.com</a> を開く（同じGoogleアカウントでログイン）</li>
+	<li>下の入力欄に：
+	<div class="code">@Google Calendar 来週火曜15:00から30分の「打ち合わせ」を作って</div>
+	</li>
+	<li>連携の許可が出たら <b>許可</b> &rarr; 以後は <b>@</b> なしでも「予定作って」で通じます</li>
+</ol>
+</div>
+
+<div class="card">
+<h3>スマホ（iPhone/Android）</h3>
+
+<ol>
+	<li>Geminiアプリを開く（同じGoogleアカウントでログイン）</li>
+	<li>入力欄に：
+	<div class="code">@Google Calendar 今日の18:30〜「買い出し」30分、予定を作って</div>
+	</li>
+	<li>連携の確認が出たら <b>許可</b></li>
+</ol>
+
+<div class="tips"><strong>コツ：</strong>確実に動かしたいときは文頭に <b>@Google Calendar</b> を付けると失敗が減ります。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2) 予定作成テンプレ -->
+
+<section id="sec2">
+<div class="container">
+<h2>2) 予定作成の&ldquo;練習&rdquo;テンプレ（コピペOK）</h2>
+
+<div class="grid cols-2">
+<div class="card"><span class="tag">基本</span>
+
+<div class="code">明日10:00から1時間、「A社ミーティング」を作って。場所はオンライン、説明に「議題：見積もり」も入れて。</div>
+<span class="tag">曖昧な日時</span>
+
+<div class="code">今週のどこかで30分、午後に「請求書作成」の時間を入れて。候補を3つ出して。</div>
+<span class="tag">繰り返し</span>
+
+<div class="code">毎週水曜の朝9:00に「チーム定例」を作って。Google Meetリンクも付けて。</div>
+</div>
+
+<div class="card"><span class="tag">変更・削除</span>
+
+<div class="code">今日の「買い出し」を18:30&rarr;19:00に変更して。</div>
+
+<div class="code">さっき作った「A社ミーティング」を削除して。</div>
+
+<div class="warn"><strong>確認：</strong>作成後はGoogleカレンダー側でタイトル・時間・カレンダーの色をチェック。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3) Gmail→予定 -->
+
+<section id="sec3">
+<div class="container">
+<h2>3) Gmailから「ワンタップで予定化」する</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>A) 自動で拾う（PC）</h3>
+
+<ol>
+	<li>Googleカレンダー &rarr; <b>設定</b> &rarr; <a href="https://www.google.com/search?q=Gmail%20%E3%81%AE%E4%BA%88%E5%AE%9A%E3%82%92%E8%A1%A8%E7%A4%BA" rel="noopener" target="_blank">「Gmailの予定を表示」</a> をON</li>
+	<li>予約確認メールなどが自動で予定として表示されます</li>
+</ol>
+
+<div class="tips"><strong>例：</strong>航空券/ホテル/美容院などの予約メールが自動でカレンダーに。</div>
+</div>
+
+<div class="card">
+<h3>B) メールを見ながら手動で予定化（PC）</h3>
+
+<ol>
+	<li>Gmail（PC）でメールを開く</li>
+	<li>上部の <b>︙</b> &rarr; <b>予定を作成</b> を選ぶ</li>
+	<li>件名や相手が入った状態でカレンダー登録できる</li>
+</ol>
+
+<h3 style="margin-top:12px">C) スマホのGmailで「追加」ボタン</h3>
+
+<p>スマホのGmailで日時を検出すると <b>カレンダーに追加</b> ボタンが出ます。タップ &rarr; 登録。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 4) 毎朝のまとめ -->
+
+<section id="sec4">
+<div class="container">
+<h2>4) 毎朝の「予定まとめ」を自動配信（任意）</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<p>Geminiアプリの <b>定期アクション</b> を使うと、毎朝決まった時間に「今日の予定まとめ」を受け取れます。</p>
+
+<div class="code">毎朝7:30に、今日の予定と大事なメールを要約して通知して。</div>
+</div>
+
+<div class="card">
+<div class="tips"><strong>ポイント：</strong>まずは「平日だけ」「朝だけ」など、シンプルな設定から始めると続けやすいです。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5) 困った時 -->
+
+<section id="sec5">
+<div class="container">
+<h2>5) 困った時のチェックリスト</h2>
+
+<div class="grid cols-2">
+<div class="card">
+<ul>
+	<li>@Google Calendar が効かない &rarr; 同じアカウントでログインしているか確認</li>
+	<li>予定が入らない &rarr; 連携の許可が保留になっていないか確認</li>
+	<li>Gmail&rarr;予定にならない &rarr; <a href="https://www.google.com/search?q=Gmail%E3%81%AE%E4%BA%88%E5%AE%9A%E3%82%92%E8%A1%A8%E7%A4%BA" rel="noopener" target="_blank">カレンダー設定の該当項目</a>がONか確認</li>
+</ul>
+</div>
+
+<div class="card">
+<div class="warn"><strong>安全のヒント：</strong>仕事用の本格運用は <a href="https://www.google.com/search?q=Google%20Workspace%20%E3%81%A8%E3%81%AF" rel="noopener" target="_blank">Google Workspace</a> が便利。いつでも連携解除できます。</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 相談 -->
+
+<section id="contact">
+<div class="container">
+<h2>メールまたはLINEで無料相談</h2>
+
+<p class="lead">「つながらない」「予定が反映されない」など、やってみて困ったらお気軽にどうぞ。</p>
+
+<div class="grid cols-2">
+<div class="card">
+<h3>📧 メールで相談</h3>
+
+<p><a href="mailto:myg20201101@gmail.com">myg20201101@gmail.com</a></p>
+</div>
+
+<div class="card">
+<h3>💬 LINEで相談</h3>
+
+<p><a href="https://line.me/R/ti/p/@700zjftd" rel="noopener" target="_blank">LINEで無料相談する</a></p>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footgrid">
+<div>
+<p class="small">&copy; サロサポ・ジギョサポデジタル教室｜Googleカレンダー &times; Gemini 実装ガイド。無断転載はご遠慮ください。</p>
+
+<p class="small">このページは単一HTMLで作成。レスポンシブ対応・軽量CSS・モバイルメニュー・アクセシビリティ（aria属性）に配慮しています。</p>
+</div>
+
+<div><a class="btn" href="#toc" style="width:100%;justify-content:center">目次に戻る</a></div>
+</div>
+</footer>
+<button aria-label="ページ上部へ" id="topBtn">▲</button><script>
+  const ham = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  ham?.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open?'true':'false');
+    drawer.setAttribute('aria-hidden', open?'false':'true');
+  });
+  document.getElementById('topBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // Close drawer on nav click (mobile)
+  drawer?.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    drawer.classList.remove('open');
+    ham.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }));
+</script>
