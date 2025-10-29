@@ -14,10 +14,28 @@
     button { width: 100%; padding: 10px; font-size: 18px; margin: 20px 0; cursor: pointer; }
     #result, #history { font-size: 16px; margin-top: 20px; white-space: pre-line; background-color: #f0f0f0; padding: 20px; border-radius: 8px; }
     summary { font-weight: bold; cursor: pointer; }
+
+    /* 追加：LINEボタン用 */
+    .btn-line {
+      display:inline-block;
+      background:#06C755; /* LINEグリーン */
+      color:#fff;
+      font-weight:bold;
+      padding:10px 16px;
+      border-radius:8px;
+      text-decoration:none;
+    }
+    .note { font-size:12px; opacity:.7; }
   </style>
 </head>
 <body>
   <h1>バス料金計算（詳細表示＋自動保存）</h1>
+
+  <!-- 追加：常設の「LINEで開く」ボタン -->
+  <p>
+    <a class="btn-line" href="https://liff.line.me/2008382073-wzBanz8r">📱 LINEで開く</a><br>
+    <span class="note">※ スマホのLINEアプリでお使いください</span>
+  </p>
 
   <label>時間制料金単価（円/時間）</label>
   <input id="timeRate" type="number" />
@@ -44,25 +62,30 @@
   <h3>過去の計算履歴（最大10件）</h3>
   <div id="history"></div>
 
-  <!-- ▼ ここから：LINE専用ガード（最初に読み込む） -->
+  <!-- ▼ LIFFガード（最初に読み込む） -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
-    // あなたの LIFF ID（提供されたURLより）
     const LIFF_ID = "2008382073-wzBanz8r";
-    // 必要ならログイン必須に（true で有効）
-    const REQUIRE_LOGIN = false;
+    const REQUIRE_LOGIN = false; // 必要なら true に
 
     (async () => {
       try {
         await liff.init({ liffId: LIFF_ID });
 
-        // LINEアプリ外（Safari/Chrome直開き等）はブロック
+        // 非LINE環境ブロック（Safari/Chrome直開き対策）
         if (!liff.isInClient()) {
+          const LIFF_URL = `https://liff.line.me/${LIFF_ID}`;
           document.body.innerHTML = `
             <main style="font-family:sans-serif;max-width:640px;margin:12vh auto;padding:24px;text-align:center">
               <h2>このページはLINEアプリ内でのみ利用できます</h2>
-              <p>LINEのトークやリッチメニューからアクセスしてください。</p>
-              <p style="opacity:.7;font-size:14px">LIFF ID: ${LIFF_ID}</p>
+              <p>スマホのLINEから以下のボタンを押してください。</p>
+              <p>
+                <a href="${LIFF_URL}"
+                   style="display:inline-block;background:#06C755;color:#fff;font-weight:bold;padding:10px 16px;border-radius:8px;text-decoration:none;">
+                   📱 LINEで開く
+                </a>
+              </p>
+              <p class="note">LIFF ID: ${LIFF_ID}</p>
             </main>`;
           return;
         }
@@ -73,7 +96,7 @@
           return;
         }
 
-        // ここまで来たらアプリ本体を起動
+        // アプリ本体を起動
         startApp();
 
       } catch (e) {
@@ -86,9 +109,9 @@
       }
     })();
   </script>
-  <!-- ▲ ここまで：LINE専用ガード -->
+  <!-- ▲ LIFFガードここまで -->
 
-  <!-- ▼ ここから：あなたの既存ロジック（startApp内に格納） -->
+  <!-- ▼ あなたの既存ロジック（startApp内） -->
   <script>
     function startApp() {
       const dayInputs = document.getElementById('dayInputs');
@@ -258,6 +281,6 @@
       });
     }
   </script>
-  <!-- ▲ ここまで：既存ロジック -->
+  <!-- ▲ 既存ロジックここまで -->
 </body>
 </html>
