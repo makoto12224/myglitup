@@ -10,14 +10,9 @@
     h1 { text-align: center; font-size: 24px; }
     label { display: block; margin-top: 10px; font-weight: bold; }
     .day-group { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-    input[type="text"], input[type="number"] {
-      width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box;
-    }
+    input[type="text"], input[type="number"] { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; }
     button { width: 100%; padding: 10px; font-size: 18px; margin: 20px 0; cursor: pointer; }
-    #result, #history {
-      font-size: 16px; margin-top: 20px; white-space: pre-line;
-      background-color: #f0f0f0; padding: 20px; border-radius: 8px;
-    }
+    #result, #history { font-size: 16px; margin-top: 20px; white-space: pre-line; background-color: #f0f0f0; padding: 20px; border-radius: 8px; }
     summary { font-weight: bold; cursor: pointer; }
   </style>
 </head>
@@ -49,171 +44,220 @@
   <h3>過去の計算履歴（最大10件）</h3>
   <div id="history"></div>
 
+  <!-- ▼ ここから：LINE専用ガード（最初に読み込む） -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
-    const dayInputs = document.getElementById('dayInputs');
-    const savedValues = JSON.parse(localStorage.getItem('busCalcInput') || '{}');
-    const history = JSON.parse(localStorage.getItem('busCalcHistory') || '[]');
+    // あなたの LIFF ID（提供されたURLより）
+    const LIFF_ID = "2008382073-wzBanz8r";
+    // 必要ならログイン必須に（true で有効）
+    const REQUIRE_LOGIN = false;
 
-    for (let i = 1; i <= 5; i++) {
-      const g = document.createElement('details');
-      g.className = 'day-group';
-      g.innerHTML = `
-        <summary>${i}日目の入力</summary>
-        <label>回送距離（km）</label><input type="number" id="deadhead${i}" />
-        <label>実車距離（km）</label><input type="number" id="real${i}" />
-        <label>出庫時間（例: 1900, 2600, 0030）</label><input type="text" id="start${i}" />
-        <label>帰庫時間（例: 2130, 2700, 0300）</label><input type="text" id="end${i}" />
-      `;
-      dayInputs.appendChild(g);
-    }
+    (async () => {
+      try {
+        await liff.init({ liffId: LIFF_ID });
 
-    function toggleAltDriver() {
-      document.getElementById('altDriverInputs').style.display = document.getElementById('hasAltDriver').checked ? 'block' : 'none';
-    }
-
-    function normalizeTime(t) {
-      const parts = t.replace(/[^0-9]/g, '').padStart(4, '0');
-      const h = parseInt(parts.slice(0, 2), 10);
-      const m = parseInt(parts.slice(2), 10);
-      return h + m / 60;
-    }
-
-    function roundTimeForCalculation(time) {
-      const hour = Math.floor(time);
-      const minute = (time - hour) * 60;
-      return minute < 30 ? hour : hour + 1;
-    }
-
-    function countNightHoursExtended(startHourRaw, endHourRaw) {
-      let nightHours = 0;
-      const startHourCalc = roundTimeForCalculation(startHourRaw);
-      const endHourCalc = roundTimeForCalculation(endHourRaw);
-      const extendedStart = startHourCalc - 1;
-      const extendedEnd = endHourCalc + 1;
-
-      for (let h = Math.floor(extendedStart); h < extendedEnd; h++) {
-        const hour = h % 24;
-        if (hour >= 22 || hour < 5) {
-          nightHours++;
-        }
-      }
-      return nightHours;
-    }
-
-    function calculate() {
-      const timeRate = Number(document.getElementById('timeRate').value);
-      const distanceRate = Number(document.getElementById('distanceRate').value);
-      const altOn = document.getElementById('hasAltDriver').checked;
-      const altTimeRate = altOn ? Number(document.getElementById('altTimeRate').value) : 0;
-      const altDistanceRate = altOn ? Number(document.getElementById('altDistanceRate').value) : 0;
-
-      if (!timeRate || !distanceRate) {
-        alert('料金単価を入力してください');
-        return;
-      }
-
-      let total = 0;
-      let result = '';
-
-      for (let i = 1; i <= 5; i++) {
-        const d = Number(document.getElementById('deadhead' + i).value);
-        const r = Number(document.getElementById('real' + i).value);
-        const s = document.getElementById('start' + i).value;
-        const e = document.getElementById('end' + i).value;
-        if (!d || !r || !s || !e) continue;
-
-        const sh = normalizeTime(s);
-        const eh = normalizeTime(e);
-        if (eh <= sh) {
-          alert(`${i}日目の帰庫時間は出庫時間より後にしてください`);
+        // LINEアプリ外（Safari/Chrome直開き等）はブロック
+        if (!liff.isInClient()) {
+          document.body.innerHTML = `
+            <main style="font-family:sans-serif;max-width:640px;margin:12vh auto;padding:24px;text-align:center">
+              <h2>このページはLINEアプリ内でのみ利用できます</h2>
+              <p>LINEのトークやリッチメニューからアクセスしてください。</p>
+              <p style="opacity:.7;font-size:14px">LIFF ID: ${LIFF_ID}</p>
+            </main>`;
           return;
         }
 
-        const startHourCalc = roundTimeForCalculation(sh);
-        const endHourCalc = roundTimeForCalculation(eh);
-        let hours = (endHourCalc - startHourCalc) + 2;
-        if (hours < 5) hours = 5;
-
-        const km = Math.ceil((d + r) / 10) * 10;
-
-        const timeCharge = hours * timeRate;
-        const distanceCharge = km * distanceRate;
-        const altAdd = altOn ? (altTimeRate * hours + altDistanceRate * km) : 0;
-
-        const nightHours = countNightHoursExtended(sh, eh);
-        const nightTimeBase = nightHours * timeRate;
-        const nightAltTimeBase = altOn ? nightHours * altTimeRate : 0;
-        const nightSurcharge = Math.floor(nightTimeBase * 0.2) + Math.floor(nightAltTimeBase * 0.2);
-
-        const totalDay = timeCharge + distanceCharge + altAdd + nightSurcharge;
-        total += totalDay;
-
-        result += `${i}日目: ${hours}時間・${km}km (運賃計算上の拘束時間) → ${totalDay.toLocaleString()}円（交代加算含む・税抜）\n` +
-          `　↳ 運行時間: ${endHourCalc - startHourCalc}時間 + 点検点呼2時間（前後1時間）\n` +
-          `　↳ 時間制料金: ${hours}h × ${timeRate}円 = ${timeCharge.toLocaleString()}円\n` +
-          `　↳ 距離制料金: ${km}km × ${distanceRate}円 = ${distanceCharge.toLocaleString()}円\n`;
-
-        if (altOn) {
-          result += `　↳ 交代運転者（時間）: ${hours}h × ${altTimeRate}円 = ${(altTimeRate * hours).toLocaleString()}円\n` +
-                    `　↳ 交代運転者（距離）: ${km}km × ${altDistanceRate}円 = ${(altDistanceRate * km).toLocaleString()}円\n`;
+        // （任意）ログイン必須
+        if (REQUIRE_LOGIN && !liff.isLoggedIn()) {
+          await liff.login({ redirectUri: location.href });
+          return;
         }
 
-        result += `　↳ 深夜加算 (${nightHours}時間)\n` +
-                  `　　基本: ${Math.floor(nightTimeBase * 0.2).toLocaleString()}円\n` +
-                  (altOn ? `　　交代: ${Math.floor(nightAltTimeBase * 0.2).toLocaleString()}円\n` : '') +
-                  `　　合計: ${nightSurcharge.toLocaleString()}円\n\n`;
+        // ここまで来たらアプリ本体を起動
+        startApp();
+
+      } catch (e) {
+        console.error(e);
+        document.body.innerHTML = `
+          <main style="font-family:sans-serif;max-width:640px;margin:12vh auto;padding:24px;text-align:center">
+            <h2>初期化エラー</h2>
+            <p>${String(e)}</p>
+          </main>`;
+      }
+    })();
+  </script>
+  <!-- ▲ ここまで：LINE専用ガード -->
+
+  <!-- ▼ ここから：あなたの既存ロジック（startApp内に格納） -->
+  <script>
+    function startApp() {
+      const dayInputs = document.getElementById('dayInputs');
+      const savedValues = JSON.parse(localStorage.getItem('busCalcInput') || '{}');
+      const history = JSON.parse(localStorage.getItem('busCalcHistory') || '[]');
+
+      for (let i = 1; i <= 5; i++) {
+        const g = document.createElement('details');
+        g.className = 'day-group';
+        g.innerHTML = `
+          <summary>${i}日目の入力</summary>
+          <label>回送距離（km）</label><input type="number" id="deadhead${i}" />
+          <label>実車距離（km）</label><input type="number" id="real${i}" />
+          <label>出庫時間（例: 1900, 2600, 0030）</label><input type="text" id="start${i}" />
+          <label>帰庫時間（例: 2130, 2700, 0300）</label><input type="text" id="end${i}" />
+        `;
+        dayInputs.appendChild(g);
       }
 
-      result += `【合計】\n${total.toLocaleString()}円（税抜）`;
-      document.getElementById('result').innerText = result;
-
-      history.unshift(result);
-      if (history.length > 10) history.pop();
-      localStorage.setItem('busCalcHistory', JSON.stringify(history));
-      updateHistory();
-      saveInput();
-    }
-
-    function saveInput() {
-      const values = {
-        timeRate: document.getElementById('timeRate').value,
-        distanceRate: document.getElementById('distanceRate').value,
-        altTimeRate: document.getElementById('altTimeRate').value,
-        altDistanceRate: document.getElementById('altDistanceRate').value,
-        hasAltDriver: document.getElementById('hasAltDriver').checked
+      window.toggleAltDriver = function toggleAltDriver() {
+        document.getElementById('altDriverInputs').style.display =
+          document.getElementById('hasAltDriver').checked ? 'block' : 'none';
       };
-      for (let i = 1; i <= 5; i++) {
-        ['deadhead', 'real', 'start', 'end'].forEach(field => {
-          values[field + i] = document.getElementById(field + i).value;
-        });
-      }
-      localStorage.setItem('busCalcInput', JSON.stringify(values));
-    }
 
-    function restoreInput() {
-      ['timeRate', 'distanceRate', 'altTimeRate', 'altDistanceRate'].forEach(id => {
-        if (savedValues[id]) document.getElementById(id).value = savedValues[id];
-      });
-      document.getElementById('hasAltDriver').checked = savedValues.hasAltDriver || false;
-      toggleAltDriver();
-      for (let i = 1; i <= 5; i++) {
-        ['deadhead', 'real', 'start', 'end'].forEach(field => {
-          const id = field + i;
+      function normalizeTime(t) {
+        const parts = String(t || '').replace(/[^0-9]/g, '').padStart(4, '0');
+        const h = parseInt(parts.slice(0, 2), 10);
+        const m = parseInt(parts.slice(2), 10);
+        return h + m / 60;
+      }
+
+      function roundTimeForCalculation(time) {
+        const hour = Math.floor(time);
+        const minute = (time - hour) * 60;
+        return minute < 30 ? hour : hour + 1;
+      }
+
+      function countNightHoursExtended(startHourRaw, endHourRaw) {
+        let nightHours = 0;
+        const startHourCalc = roundTimeForCalculation(startHourRaw);
+        const endHourCalc = roundTimeForCalculation(endHourRaw);
+        const extendedStart = startHourCalc - 1;
+        const extendedEnd = endHourCalc + 1;
+
+        for (let h = Math.floor(extendedStart); h < extendedEnd; h++) {
+          const hour = ((h % 24) + 24) % 24;
+          if (hour >= 22 || hour < 5) {
+            nightHours++;
+          }
+        }
+        return nightHours;
+      }
+
+      window.calculate = function calculate() {
+        const timeRate = Number(document.getElementById('timeRate').value);
+        const distanceRate = Number(document.getElementById('distanceRate').value);
+        const altOn = document.getElementById('hasAltDriver').checked;
+        const altTimeRate = altOn ? Number(document.getElementById('altTimeRate').value) : 0;
+        const altDistanceRate = altOn ? Number(document.getElementById('altDistanceRate').value) : 0;
+
+        if (!timeRate || !distanceRate) {
+          alert('料金単価を入力してください');
+          return;
+        }
+
+        let total = 0;
+        let result = '';
+
+        for (let i = 1; i <= 5; i++) {
+          const d = Number(document.getElementById('deadhead' + i).value);
+          const r = Number(document.getElementById('real' + i).value);
+          const s = document.getElementById('start' + i).value;
+          const e = document.getElementById('end' + i).value;
+          if (!d || !r || !s || !e) continue;
+
+          const sh = normalizeTime(s);
+          const eh = normalizeTime(e);
+          if (eh <= sh) {
+            alert(`${i}日目の帰庫時間は出庫時間より後にしてください`);
+            return;
+          }
+
+          const startHourCalc = roundTimeForCalculation(sh);
+          const endHourCalc = roundTimeForCalculation(eh);
+          let hours = (endHourCalc - startHourCalc) + 2;
+          if (hours < 5) hours = 5;
+
+          const km = Math.ceil((d + r) / 10) * 10;
+
+          const timeCharge = hours * timeRate;
+          const distanceCharge = km * distanceRate;
+          const altAdd = altOn ? (altTimeRate * hours + altDistanceRate * km) : 0;
+
+          const nightHours = countNightHoursExtended(sh, eh);
+          const nightTimeBase = nightHours * timeRate;
+          const nightAltTimeBase = altOn ? nightHours * altTimeRate : 0;
+          const nightSurcharge = Math.floor(nightTimeBase * 0.2) + Math.floor(nightAltTimeBase * 0.2);
+
+          const totalDay = timeCharge + distanceCharge + altAdd + nightSurcharge;
+          total += totalDay;
+
+          result += `${i}日目: ${hours}時間・${km}km (運賃計算上の拘束時間) → ${totalDay.toLocaleString()}円（交代加算含む・税抜）\n` +
+                    `　↳ 運行時間: ${endHourCalc - startHourCalc}時間 + 点検点呼2時間（前後1時間）\n` +
+                    `　↳ 時間制料金: ${hours}h × ${timeRate}円 = ${timeCharge.toLocaleString()}円\n` +
+                    `　↳ 距離制料金: ${km}km × ${distanceRate}円 = ${distanceCharge.toLocaleString()}円\n`;
+
+          if (altOn) {
+            result += `　↳ 交代運転者（時間）: ${hours}h × ${altTimeRate}円 = ${(altTimeRate * hours).toLocaleString()}円\n` +
+                      `　↳ 交代運転者（距離）: ${km}km × ${altDistanceRate}円 = ${(altDistanceRate * km).toLocaleString()}円\n`;
+          }
+
+          result += `　↳ 深夜加算 (${nightHours}時間)\n` +
+                    `　　基本: ${Math.floor(nightTimeBase * 0.2).toLocaleString()}円\n` +
+                    (altOn ? `　　交代: ${Math.floor(nightAltTimeBase * 0.2).toLocaleString()}円\n` : '') +
+                    `　　合計: ${nightSurcharge.toLocaleString()}円\n\n`;
+        }
+
+        result += `【合計】\n${total.toLocaleString()}円（税抜）`;
+        document.getElementById('result').innerText = result;
+
+        history.unshift(result);
+        if (history.length > 10) history.pop();
+        localStorage.setItem('busCalcHistory', JSON.stringify(history));
+        updateHistory();
+        saveInput();
+      };
+
+      window.saveInput = function saveInput() {
+        const values = {
+          timeRate: document.getElementById('timeRate').value,
+          distanceRate: document.getElementById('distanceRate').value,
+          altTimeRate: document.getElementById('altTimeRate').value,
+          altDistanceRate: document.getElementById('altDistanceRate').value,
+          hasAltDriver: document.getElementById('hasAltDriver').checked
+        };
+        for (let i = 1; i <= 5; i++) {
+          ['deadhead', 'real', 'start', 'end'].forEach(field => {
+            values[field + i] = document.getElementById(field + i).value;
+          });
+        }
+        localStorage.setItem('busCalcInput', JSON.stringify(values));
+      };
+
+      function restoreInput() {
+        ['timeRate', 'distanceRate', 'altTimeRate', 'altDistanceRate'].forEach(id => {
           if (savedValues[id]) document.getElementById(id).value = savedValues[id];
         });
+        document.getElementById('hasAltDriver').checked = savedValues.hasAltDriver || false;
+        toggleAltDriver();
+        for (let i = 1; i <= 5; i++) {
+          ['deadhead', 'real', 'start', 'end'].forEach(field => {
+            const id = field + i;
+            if (savedValues[id]) document.getElementById(id).value = savedValues[id];
+          });
+        }
       }
+
+      function updateHistory() {
+        document.getElementById('history').innerText = history.join('\n\n');
+      }
+
+      restoreInput();
+      updateHistory();
+
+      document.querySelectorAll("input").forEach(input => {
+        input.addEventListener("input", saveInput);
+      });
     }
-
-    function updateHistory() {
-      document.getElementById('history').innerText = history.join('\n\n');
-    }
-
-    restoreInput();
-    updateHistory();
-
-    document.querySelectorAll("input").forEach(input => {
-      input.addEventListener("input", saveInput);
-    });
   </script>
+  <!-- ▲ ここまで：既存ロジック -->
 </body>
 </html>
